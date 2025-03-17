@@ -22,7 +22,7 @@ public:
     // - Column 2: if row == 1, display Peashooter's name; otherwise display its cost.
     // - Column 3: if row == 1, display WallNut's name; otherwise display its cost.
     PlantsBoard() : Board(4, 5), currency(2),
-        Sunflower("S", 2), Peashooter("P", 4), WallNut("W", 2) {
+        Sunflower("S", 1), Peashooter("P", 2), WallNut("W", 1) {
 
         // Initialize grid dimensions.
         grid.resize(height, std::vector<std::string>(width, " "));

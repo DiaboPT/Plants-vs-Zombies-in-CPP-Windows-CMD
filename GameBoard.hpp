@@ -23,6 +23,18 @@ public:
         if (pos.x >= 0 && pos.x < width && pos.y >= 0 && pos.y < height)
             grid[pos.y][pos.x] = plantSymbol;
     }
+
+    int Get_Sunflowers() {
+        int n = 1;
+        for (int j = 0; j < height; j++) {
+            for (int i = 0; i < width; i++) {
+                if (GetCellContent(i, j) == "S") {
+                    n++;
+                }
+            }
+        }
+        return n;
+    }
 };
 
 #endif
