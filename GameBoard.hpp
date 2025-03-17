@@ -8,7 +8,7 @@ class GameBoard : public Board {
 private:
     std::vector<std::vector<char>> grid;
 public:
-    GameBoard() : Board(11, 11) {
+    GameBoard() : Board(11, 5) {
         // Initialize grid with spaces.
         grid.resize(height, std::vector<char>(width, ' '));
     }
@@ -18,10 +18,10 @@ public:
         return std::string(1, grid[y][x]);
     }
 
-    // Place a plant symbol at a specific position.
-    void PlacePlant(const Coordenates& pos, char plantSymbol) {
+    // Place a symbol at a specific position.
+    void PlaceInGrid(const Coordenates& pos, char Symbol) {
         if (pos.x >= 0 && pos.x < width && pos.y >= 0 && pos.y < height)
-            grid[pos.y][pos.x] = plantSymbol;
+            grid[pos.y][pos.x] = Symbol;
     }
 
     int Get_Sunflowers() {

@@ -21,8 +21,8 @@ public:
     // - Column 1: if row == 1, display Sunflower's name; otherwise display its cost.
     // - Column 2: if row == 1, display Peashooter's name; otherwise display its cost.
     // - Column 3: if row == 1, display WallNut's name; otherwise display its cost.
-    PlantsBoard() : Board(4, 5), currency(2),
-        Sunflower("S", 1), Peashooter("P", 2), WallNut("W", 1) {
+    PlantsBoard() : Board(4, 2), currency(2),
+        Sunflower("S", 3, 1), Peashooter("P", 3, 2), WallNut("W", 75, 1) {
 
         // Initialize grid dimensions.
         grid.resize(height, std::vector<std::string>(width, " "));
@@ -31,16 +31,16 @@ public:
         for (int y = 0; y < height; y++) {
             for (int x = 0; x < width; x++) {
                 if (x == 0) {
-                    grid[y][x] = (y == 1) ? "C" : std::to_string(currency);
+                    grid[y][x] = (y == 0) ? "C" : std::to_string(Get_Currency());
                 }
                 else if (x == 1) {
-                    grid[y][x] = (y == 1) ? Sunflower.Get_Name() : std::to_string(Sunflower.Get_Cost());
+                    grid[y][x] = (y == 0) ? Sunflower.Get_Name() : std::to_string(Sunflower.Get_Cost());
                 }
                 else if (x == 2) {
-                    grid[y][x] = (y == 1) ? Peashooter.Get_Name() : std::to_string(Peashooter.Get_Cost());
+                    grid[y][x] = (y == 0) ? Peashooter.Get_Name() : std::to_string(Peashooter.Get_Cost());
                 }
                 else if (x == 3) {
-                    grid[y][x] = (y == 1) ? WallNut.Get_Name() : std::to_string(WallNut.Get_Cost());
+                    grid[y][x] = (y == 0) ? WallNut.Get_Name() : std::to_string(WallNut.Get_Cost());
                 }
             }
         }
@@ -57,7 +57,16 @@ public:
     void Set_Currency(int value) {
         currency = value;
         for (int y = 0; y < height; y++) {
-            if (y != 1) {
+            if (y != 0) {
+                grid[y][0] = std::to_string(currency);
+            }
+        }
+    }
+
+    void Add_Currency(int value) {
+        currency += value;
+        for (int y = 0; y < height; y++) {
+            if (y != 0) {
                 grid[y][0] = std::to_string(currency);
             }
         }

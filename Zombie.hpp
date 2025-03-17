@@ -1,14 +1,14 @@
-#ifndef PLANT_HPP
-#define PLANT_HPP
+#ifndef ZOMBIE_HPP
+#define ZOMBIE_HPP
 
 #include <string>
 #include "Transform.hpp"
 
 using std::string;
 
-class Plant {
+class Zombie {
 public:
-	Plant(string name, int health, int cost);
+	Zombie(string name, int health, int cost);
 
 	void Set_Name(string value);
 	string Get_Name();
@@ -21,6 +21,7 @@ public:
 	int Get_Cost();
 
 	void Set_Transform(int x, int y);
+	void Add_Transform(int x);
 	Coordenates Get_Transform();
 
 private:

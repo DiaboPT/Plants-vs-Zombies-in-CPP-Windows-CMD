@@ -1,7 +1,8 @@
 #include "Plant.hpp"
 
-Plant::Plant(string new_name, int new_cost) {
+Plant::Plant(string new_name, int new_health, int new_cost) {
 	Set_Name(new_name);
+	Set_Health(new_health);
 	Set_Cost(new_cost);
 };
 
@@ -10,6 +11,16 @@ void Plant::Set_Name(string value) {
 }
 string Plant::Get_Name() {
 	return name;
+}
+
+void Plant::Set_Health(int value) {
+	health = value;
+}
+void Plant::Add_Health(int value) {
+	health += value;
+}
+int Plant::Get_Health() {
+	return health;
 }
 
 void Plant::Set_Cost(int value) {

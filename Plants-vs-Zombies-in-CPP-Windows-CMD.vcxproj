@@ -129,6 +129,7 @@
   <ItemGroup>
     <ClCompile Include="main.cpp" />
     <ClCompile Include="Plant.cpp" />
+    <ClCompile Include="Zombie.cpp" />
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="Board.hpp" />
@@ -137,6 +138,7 @@
     <ClInclude Include="Plant.hpp" />
     <ClInclude Include="PlantsBoard.hpp" />
     <ClInclude Include="Transform.hpp" />
+    <ClInclude Include="Zombie.hpp" />
   </ItemGroup>
   <Import Project="$(VCTargetsPath)\Microsoft.Cpp.targets" />
   <ImportGroup Label="ExtensionTargets">

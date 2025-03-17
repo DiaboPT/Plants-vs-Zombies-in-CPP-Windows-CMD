@@ -17,31 +17,34 @@ public:
         Transform transform = { {0, 0}, {width, height} };
 
         for (transform.position.y = 0; transform.position.y < transform.size.y; transform.position.y++) {
-            if (transform.position.y % 2 == 0) {
-                s += "+";
-                for (transform.position.x = 0; transform.position.x < transform.size.x; transform.position.x++) {
-                    s += "---+";
-                }
+            s += "+";
+            for (transform.position.x = 0; transform.position.x < transform.size.x; transform.position.x++) {
+                s += "---+";
             }
-            else {
-                s += "|";
-                for (transform.position.x = 0; transform.position.x < transform.size.x; transform.position.x++) {
-                    s += " ";
-                    if (selected.x == transform.position.x and selected.y == transform.position.y) {
-                        s += "X";
-                    }
-                    else {
-                        s += GetCellContent(transform.position.x, transform.position.y);
-                    }
-                    s += " |";
+            s += "\n|";
+            for (transform.position.x = 0; transform.position.x < transform.size.x; transform.position.x++) {
+                s += " ";
+                if (selected.x == transform.position.x and selected.y == transform.position.y) {
+                    s += "\033[44m";  // Start blue background
+                    s += GetCellContent(transform.position.x, transform.position.y);
+                    s += "\033[0m";   // Reset color
                 }
+                else {
+                    s += GetCellContent(transform.position.x, transform.position.y);
+                }
+                s += " |";
             }
             s += "\n";
+        }
+        s += "+";
+        for (transform.position.x = 0; transform.position.x < transform.size.x; transform.position.x++) {
+            s += "---+";
         }
         s += "\n";
 
         return s;
     }
+
 
     virtual std::string GetCellContent(int x, int y) = 0;  // To be overridden
 
