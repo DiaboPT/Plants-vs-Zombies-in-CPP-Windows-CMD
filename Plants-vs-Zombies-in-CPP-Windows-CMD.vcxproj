@@ -127,12 +127,11 @@
     </Link>
   </ItemDefinitionGroup>
   <ItemGroup>
-    <ClCompile Include="GameBoard.cpp" />
     <ClCompile Include="main.cpp" />
     <ClCompile Include="Plant.cpp" />
-    <ClCompile Include="PlantsBoard.cpp" />
   </ItemGroup>
   <ItemGroup>
+    <ClInclude Include="Board.hpp" />
     <ClInclude Include="Coordenates.hpp" />
     <ClInclude Include="GameBoard.hpp" />
     <ClInclude Include="Plant.hpp" />
