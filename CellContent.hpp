@@ -1,27 +1,29 @@
-#ifndef PLANT_HPP
-#define PLANT_HPP
+// CellContent.hpp
+#ifndef CELLCONTENT_HPP
+#define CELLCONTENT_HPP
 
 #include <string>
 #include "Transform.hpp"
 
 using std::string;
 
-class Plant {
+class CellContent {
 public:
-	Plant(string name, int health, int cost);
+	CellContent();
+	CellContent(string name, int health, int cost);
 
 	void Set_Name(string value);
 	string Get_Name();
 
 	void Set_Health(int value);
 	void Add_Health(int value);
-	int Get_Health();
+	int Get_Health() const;
 
 	void Set_Cost(int value);
-	int Get_Cost();
+	int Get_Cost() const;
 
 	void Set_Transform(int x, int y);
-	Coordenates Get_Transform();
+	Coordenates Get_Transform() const;
 
 private:
 	string name;
@@ -31,4 +33,4 @@ private:
 	Coordenates transform = { 0 , 0 };
 };
 
-#endif // !PLANT_HPP
+#endif // !CELLCONTENT_HPP

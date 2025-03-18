@@ -1,8 +1,10 @@
+// Board.hpp
 #ifndef BOARD_HPP
 #define BOARD_HPP
 
 #include <vector>
 #include <string>
+#include "CellContent.hpp"
 #include "Transform.hpp"
 
 class Board {
@@ -26,11 +28,11 @@ public:
                 s += " ";
                 if (selected.x == transform.position.x and selected.y == transform.position.y) {
                     s += "\033[44m";  // Start blue background
-                    s += GetCellContent(transform.position.x, transform.position.y);
+                    s += GetCellContent(transform.position.x, transform.position.y).Get_Name();
                     s += "\033[0m";   // Reset color
                 }
                 else {
-                    s += GetCellContent(transform.position.x, transform.position.y);
+                    s += GetCellContent(transform.position.x, transform.position.y).Get_Name();
                 }
                 s += " |";
             }
@@ -46,7 +48,7 @@ public:
     }
 
 
-    virtual std::string GetCellContent(int x, int y) = 0;  // To be overridden
+    virtual CellContent GetCellContent(int x, int y) = 0;  // To be overridden
 
     virtual ~Board() {}
 };

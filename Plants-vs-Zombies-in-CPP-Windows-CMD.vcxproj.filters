@@ -18,10 +18,7 @@
     <ClCompile Include="main.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
-    <ClCompile Include="Plant.cpp">
-      <Filter>Source Files</Filter>
-    </ClCompile>
-    <ClCompile Include="Zombie.cpp">
+    <ClCompile Include="CellContent.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
   </ItemGroup>
@@ -35,16 +32,13 @@
     <ClInclude Include="Transform.hpp">
       <Filter>Header Files</Filter>
     </ClInclude>
-    <ClInclude Include="Plant.hpp">
+    <ClInclude Include="CellContent.hpp">
       <Filter>Header Files</Filter>
     </ClInclude>
     <ClInclude Include="GameBoard.hpp">
       <Filter>Header Files</Filter>
     </ClInclude>
     <ClInclude Include="Board.hpp">
-      <Filter>Header Files</Filter>
-    </ClInclude>
-    <ClInclude Include="Zombie.hpp">
       <Filter>Header Files</Filter>
     </ClInclude>
   </ItemGroup>
