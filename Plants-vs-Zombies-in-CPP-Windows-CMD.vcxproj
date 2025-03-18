@@ -18,6 +18,14 @@
       <Platform>x64</Platform>
     </ProjectConfiguration>
   </ItemGroup>
+  <ItemGroup>
+    <ClCompile Include="GameLoop.cpp" />
+    <ClCompile Include="main.cpp" />
+  </ItemGroup>
+  <ItemGroup>
+    <ClInclude Include="GameLoop.hpp" />
+    <ClInclude Include="header.hpp" />
+  </ItemGroup>
   <PropertyGroup Label="Globals">
     <VCProjectVersion>17.0</VCProjectVersion>
     <Keyword>Win32Proj</Keyword>
@@ -126,18 +134,6 @@
       <GenerateDebugInformation>true</GenerateDebugInformation>
     </Link>
   </ItemDefinitionGroup>
-  <ItemGroup>
-    <ClCompile Include="main.cpp" />
-    <ClCompile Include="CellContent.cpp" />
-  </ItemGroup>
-  <ItemGroup>
-    <ClInclude Include="Board.hpp" />
-    <ClInclude Include="Coordenates.hpp" />
-    <ClInclude Include="GameBoard.hpp" />
-    <ClInclude Include="CellContent.hpp" />
-    <ClInclude Include="PlantsBoard.hpp" />
-    <ClInclude Include="Transform.hpp" />
-  </ItemGroup>
   <Import Project="$(VCTargetsPath)\Microsoft.Cpp.targets" />
   <ImportGroup Label="ExtensionTargets">
   </ImportGroup>
