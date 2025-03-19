@@ -67,23 +67,31 @@ const char* dark_colors[] = {
 	BGCOLOR(131)  // 345° - Dark Scarlet
 };
 
+#include <random>
+#include <vector>
+
 class Random {
 public:
 	static int Range(int min, int max) {
-		static std::random_device rd;
-		static std::mt19937 mt(rd());
+		static std::mt19937 mt(Seed()); // Shared RNG
 		std::uniform_int_distribution<int> dist(min, max);
 		return dist(mt);
 	}
 
 	static int FromList(const std::vector<int>& numbers) {
 		if (numbers.empty()) return 0;
-		static std::random_device rd;
-		static std::mt19937 mt(rd());
+		static std::mt19937 mt(Seed()); // Shared RNG
 		std::uniform_int_distribution<int> dist(0, numbers.size() - 1);
 		return numbers[dist(mt)];
 	}
+
+private:
+	static std::mt19937::result_type Seed() {
+		static std::random_device rd;
+		return rd();
+	}
 };
+
 
 // Clears the console.
 void static ClearScreen() {
