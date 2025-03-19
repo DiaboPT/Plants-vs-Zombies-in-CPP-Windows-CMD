@@ -9,6 +9,7 @@
 #include <conio.h>
 #include <random>
 #include <windows.h>
+#include <vector>
 
 #include "GameLoop.hpp"
 
