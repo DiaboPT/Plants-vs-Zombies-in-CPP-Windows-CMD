@@ -259,25 +259,137 @@ public:
 bool Menu() {
 	char key = 'A';
 	int selection = 0;
-	while (key != ' ') {
+	bool menuloop = true;
+	while (menuloop) {
 		ResetCursor();
-		cout << "+---------------------------------------------------------+" << "\n";
-		cout << "| " << "PPPPP " << "   " << "VV     VV" << "   " << "ZZZZZZ" << "   " << "   " << " CCCCC" << "   " << "  +  " << "   " << "  +  " << " |" << "\n";
-		cout << "| " << "PP  PP" << "   " << " VV   VV " << "   " << "   ZZ " << "   " << "   " << "CCC   " << "   " << "  +  " << "   " << "  +  " << " |" << "\n";
-		cout << "| " << "PPPPP " << "   " << "  VV VV  " << "   " << "  ZZ  " << "   " << "   " << "CC    " << "   " << "+++++" << "   " << "+++++" << " |" << "\n";
-		cout << "| " << "PP    " << "   " << "   VVV   " << "   " << " ZZ   " << "   " << "   " << "CCC   " << "   " << "  +  " << "   " << "  +  " << " |" << "\n";
-		cout << "| " << "PP    " << "   " << "    V    " << "   " << "ZZZZZZ" << "   " << "   " << " CCCCC" << "   " << "  +  " << "   " << "  +  " << " |" << "\n";
-		cout << "+---------------------------------------------------------+" << "\n";
-		cout << ((selection == 0) ? string("> Start <") : string("  Start  ")) << "\n";
-		cout << ((selection == 1) ? string("> Quit  <") : string("  Quit   ")) << "\n";
+		cout << BGCOLOR(22);
+		cout << "+------------------------------------------------------------------+" << "\n";
+		cout << "| " << COLOR(46) << "PPPPP " << "   " << RESET << BGCOLOR(22) << "VV     VV" << " SSSS " << "     " << COLOR(196) << "ZZZZZZ" << "      " << RESET << BGCOLOR(22) << " CCCCC" << "   " << "  +  " << "   " << "  +  " << " |" << "\n";
+		cout << "| " << COLOR(46) << "PP  PP" << "   " << RESET << BGCOLOR(22) << " VV   VV " << "SS   S" << "     " << COLOR(196) << "   ZZ " << "      " << RESET << BGCOLOR(22) << "CCC   " << "   " << "  +  " << "   " << "  +  " << " |" << "\n";
+		cout << "| " << COLOR(46) << "PPPPP " << "   " << RESET << BGCOLOR(22) << "  VV VV  " << "  SS  " << "     " << COLOR(196) << "  ZZ  " << "      " << RESET << BGCOLOR(22) << "CC    " << "   " << "+++++" << "   " << "+++++" << " |" << "\n";
+		cout << "| " << COLOR(46) << "PP    " << "   " << RESET << BGCOLOR(22) << "   VVV   " << "S   SS" << "..   " << COLOR(196) << " ZZ   " << "      " << RESET << BGCOLOR(22) << "CCC   " << "   " << "  +  " << "   " << "  +  " << " |" << "\n";
+		cout << "| " << COLOR(46) << "PP    " << "   " << RESET << BGCOLOR(22) << "    V    " << " SSSS " << "..   " << COLOR(196) << "ZZZZZZ" << "      " << RESET << BGCOLOR(22) << " CCCCC" << "   " << "  +  " << "   " << "  +  " << " |" << "\n";
+		cout << "+------------------------------------------------------------------+" << "\n";
+		cout << RESET;
+		cout << ((selection == 0) ? COLOR(46) + string("> Start <") + RESET : string("  Start  ")) << "\n";
+		cout << ((selection == 1) ? COLOR(46) + string("> Guide < <- Recommended") + RESET : string("  Guide   <- Recommended")) << "\n";
+		cout << ((selection == 2) ? COLOR(46) + string("> Quit  <") + RESET : string("  Quit   ")) << "\n";
+		cout << RESET;
+		cout << "\n";
+
+		cout << "W - Move up   " << "\n";
+		cout << "S - Move down " << "\n";
+		cout << "Space - Select" << "\n";
+
 		key = getKeyPressed();
 		switch (key) {
 		case 'w': case 'W': if (selection > 0) selection--; break;
-		case 's': case 'S': if (selection < 1) selection++; break;
+		case 's': case 'S': if (selection < 2) selection++; break;
 
 		case ' ':
 			ClearScreen();
-			return (selection == 0) ? true : false;
+			switch (selection) {
+			case 0:
+				menuloop = false;
+				return true;
+				break;
+			case 1:
+				for (int i = 0; i < 4; i++) {
+					switch (i) {
+					case 1:
+						cout << "Plants Board is where the plants are and where you can select them" << "\n";
+						cout << "\n";
+
+						cout << "+---+---+---+-----+                                " << "\n";
+						cout << "| C |   | P | ... | <- Plants (Colored if selected)" << "\n";
+						cout << "+---+---+---+-----+                                " << "\n";
+						cout << "| A |   | B | ... | <- Cost of the plant on top    " << "\n";
+						cout << "+---+---+---+-----+                                " << "\n";
+						cout << "\n";
+
+						cout << "C - Currency / A - Your currency right now                  " << "\n";
+						cout << "P - Plant    / B - Currency you need in A to place the plant" << "\n";
+						cout << "\n";
+
+						cout << "Keys for Plants Board:" << "\n";
+						cout << "- Q - Move to the left in the Plant Board" << "\n";
+						cout << "- E - Move to the right in the Plant Board" << "\n";
+						cout << "\n";
+
+						getKeyPressed();
+						ClearScreen();
+						break;
+					case 2:
+						cout << "Game Board is where you can place plants to actually affect the game" << "\n";
+						cout << "\n";
+
+						cout << "+---+---+---+-----+" << "\n";
+						cout << "| S | P |   | ... |" << "\n";
+						cout << "+---+---+---+-----+" << "\n";
+						cout << "| S |   |   | ... |" << "\n";
+						cout << "+---+---+---+-----+" << "\n";
+						cout << "|   | W | A | ... |" << "\n";
+						cout << "+---+---+---+-----+" << "\n";
+						cout << "|   | W | B | ... |" << "\n";
+						cout << "+---+---+---+-----+" << "\n";
+						cout << "|   |   | C | ... |" << "\n";
+						cout << "+---+---+---+-----+" << "\n";
+						cout << "\n";
+
+						cout << "S - Sunflower   (Plant  - gives more currency each time)" << "\n";
+						cout << "P - Peashooter  (Plant  - kills zombies)" << "\n";
+						cout << "W - Wall-Nut    (Plant  - tanky)" << "\n";
+						cout << "\n";
+
+						cout << "A - Basic       (Zombie - normal)" << "\n";
+						cout << "B - Cone-Head   (Zombie - double stats from Basic)" << "\n";
+						cout << "C - Bucket-Head (Zombie - triple stats from Basic)" << "\n";
+						cout << "\n";
+
+						cout << "Keys for Plants Board:" << "\n";
+						cout << "- W - Move to the up in the Game Board" << "\n";
+						cout << "- A - Move to the left in the Game Board" << "\n";
+						cout << "- S - Move to the down in the Game Board" << "\n";
+						cout << "- D - Move to the right in the Game Board" << "\n";
+						cout << "\n";
+
+						getKeyPressed();
+						ClearScreen();
+						break;
+					case 3:
+						cout << "Zombie Board is where the zombies are and where the pc can select them" << "\n";
+						cout << "\n";
+
+						cout << "+---+---+---+-----+                                 " << "\n";
+						cout << "| C |   | Z | ... | <- Zombies (Colored if selected)" << "\n";
+						cout << "+---+---+---+-----+                                 " << "\n";
+						cout << "| A |   | B | ... | <- Cost of the zombie on top    " << "\n";
+						cout << "+---+---+---+-----+                                 " << "\n";
+						cout << "\n";
+
+						cout << "C - Currency / A - Pc currency right now                   " << "\n";
+						cout << "Z - Zombie   / B - Currency pc needs in A to place a zombie" << "\n";
+						cout << "\n";
+
+						getKeyPressed();
+						ClearScreen();
+						break;
+					case 4:
+						cout << "Objective: Survive";
+						cout << "\n";
+
+						getKeyPressed();
+						ClearScreen();
+						break;
+					}
+
+				}
+				break;
+			case 2:
+				menuloop = false;
+				return false;
+				break;
+			}
 			break;
 		case 27: return false; break;
 		}
