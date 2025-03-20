@@ -3,6 +3,95 @@
 
 using namespace std;
 
+// Notes frequencies (in Hz)
+const int C4 = 261;
+const int D4 = 294;
+const int E4 = 329;
+const int F4 = 349;
+const int G4 = 392;
+const int A4 = 440;
+const int B4 = 466;
+const int C5 = 523;
+
+// Helper function to create a rest between sections (helps add phrasing)
+void rest(int duration) {
+    std::this_thread::sleep_for(std::chrono::milliseconds(duration));
+}
+
+// Helper function to play a note with a specified frequency and duration
+void playNote(int frequency, int duration) {
+    Beep(frequency, duration);
+    rest(50);  // Short pause between notes
+}
+
+void GrasswalkSong() {
+    std::thread([] {
+        while (true) {
+            playNote(E4, 400); // E
+            playNote(E4, 400); // E
+            playNote(E4, 400); // E
+            playNote(E4, 400); // E
+            playNote(D4, 400); // D
+            playNote(D4, 400); // D
+            playNote(E4, 400); // E
+            playNote(D4, 400); // D
+            playNote(C4, 400); // C
+
+            rest(200);  // Pause between phrases
+
+            // Phrase 2: Transition section
+            playNote(G4, 400); // G
+            playNote(G4, 400); // G
+            playNote(F4, 400); // F
+            playNote(F4, 400); // F
+            playNote(E4, 400); // E
+            playNote(E4, 400); // E
+            playNote(D4, 400); // D
+            playNote(D4, 400); // D
+
+            rest(200);  // Pause for phrasing
+
+            // Phrase 3: High note variation
+            playNote(C5, 400); // C5
+            playNote(C5, 400); // C5
+            playNote(B4, 400); // B
+            playNote(A4, 400); // A
+            playNote(G4, 400); // G
+            playNote(F4, 400); // F
+
+            rest(200);  // Pause for phrasing
+
+            // Phrase 4: Repetition with slight variation
+            playNote(E4, 400); // E
+            playNote(E4, 400); // E
+            playNote(E4, 400); // E
+            playNote(E4, 400); // E
+            playNote(D4, 400); // D
+            playNote(D4, 400); // D
+            playNote(E4, 400); // E
+            playNote(D4, 400); // D
+
+            // End with a long fade-out note
+            playNote(E4, 800); // E (long note to signal the end)
+        }
+        }).detach();
+}
+
+void PlayZombieBiteSound() {
+    std::thread([] {
+        Beep(C4, 100); // Low-frequency bite
+        Beep(F4, 120); // Mid-range crunch
+        Beep(G4, 80);  // Tearing sound
+        }).detach();
+}
+
+void PlayZombieHitSound() {
+    std::thread([] {
+        Beep(C5, 50);  // Quick high-pitch "impact"
+        Beep(D4, 70);  // Slightly lower "reverberation"
+        }).detach();
+}
+
 // Cross-platform GetConsoleWindow() equivalent for Linux
 void SetConsoleSize(int width, int height) {
 #ifdef _WIN32
@@ -153,12 +242,16 @@ private:
 public:
     CellContent() : name(" "), cost(0), hp(0), speed(0) {}
 
+    CellContent(string new_name, int new_cost)
+        : name(new_name), cost(new_cost), hp(0), speed(0) {
+    }
+
     CellContent(string new_name, int new_cost, int new_hp)
         : name(new_name), cost(new_cost), hp(new_hp), speed(0) {
     }
 
-    CellContent(string new_name, int new_cost, int new_hp, int new_speed)
-        : name(new_name), cost(new_cost), hp(new_hp), speed(new_speed) {
+    CellContent(string new_name, int new_cost, int new_speed, int new_hp)
+        : name(new_name), cost(new_cost), speed(new_speed), hp(new_hp) {
     }
 
     void Set_Name(string value) { name = value; }
@@ -396,18 +489,18 @@ void GameLoop() {
     auto lastFrameTime = chrono::steady_clock::now();
 
     // Important cells
-    CellContent Nothing, PlantCurrency(COLOR(220) + string("C"), 1, 0, 10), ZombieCurrency(PlantCurrency);
+    CellContent Nothing, PlantCurrency(COLOR(220) + string("C"), 1, 10, 0), ZombieCurrency(PlantCurrency);
     int zombieTimeCount = 1;
 
     // Plants cells
-    CellContent Peashooter = CellContent(COLOR(46) + string("P"), 4, 6, 1.5);
-    CellContent Sunflower = CellContent(COLOR(220) + string("S"), 2, 6, 24);
+    CellContent Peashooter = CellContent(COLOR(46) + string("P"), 4, 1.5, 6);
+    CellContent Sunflower = CellContent(COLOR(220) + string("S"), 2, 24, 6);
     CellContent Wall_Nut = CellContent(COLOR(208) + string("W"), 2, 72);
 
     // Zombies cells
-    CellContent Basic = CellContent(COLOR(165) + string("A"), 5, 14, 4);
+    CellContent Basic = CellContent(COLOR(165) + string("A"), 5, 4, 14);
     CellContent ConeHead = CellContent(COLOR(208) + string("B"), Basic.Get_Cost() * 2, Basic.Get_HP() * 2, Basic.Get_Speed());
-    CellContent BucketHead = CellContent("\033[97m" + string("C"), Basic.Get_Cost() * 3, Basic.Get_Cost() * 3, Basic.Get_Speed());
+    CellContent BucketHead = CellContent("\033[97m" + string("C"), Basic.Get_Cost() * 3, Basic.Get_HP() * 3, Basic.Get_Speed());
 
     // Board setup
     const int plantBoardWidth = 5, plantBoardHeight = 2;
@@ -416,6 +509,7 @@ void GameLoop() {
     GameBoard plantsBoard(plantBoardWidth, plantBoardHeight), gameBoard(gameBoardWidth, gameBoardHeight), zombieBoard(zombieBoardWidth, zombieBoardHeight);
     Coords plantBoardSelection{ 2, 0 }, gameBoardSelection{ 0, 0 }, zombieBoardSelection{ 2, 0 };
 
+    // GrasswalkSong();
     for (int y = 0; y < plantBoardHeight; y++) {
         for (int x = 0; x < plantBoardWidth; x++) {
             switch (x) {
@@ -533,6 +627,7 @@ void GameLoop() {
                                     damagedZombie.Add_HP(-1);
                                     if (damagedZombie.Get_HP() != 0) { gameBoard.Set_Cell({ i , y }, damagedZombie); }
                                     else { gameBoard.Set_Cell({ i , y }, Nothing); }
+                                    PlayZombieHitSound();
                                     break;
                                 }
                             }
@@ -618,13 +713,13 @@ void GameLoop() {
                                 damagedPlant.Add_HP(-1);
                                 if (damagedPlant.Get_HP() != 0) { gameBoard.Set_Cell({ x - 1, y }, damagedPlant); }
                                 else { gameBoard.Set_Cell({ x - 1, y }, Nothing); }
+                                PlayZombieBiteSound();
                             }
                         }
                         else {
                             if ((frameCount % (fps * gameBoard.Get_Cell({ x,y }).Get_Speed())) == 0) {
-
                                 // If next cell is not Plant
-                                if (x >= 0) {
+                                if (x > 0) {
                                     // Moves a cell foward
                                     gameBoard.Set_Cell({ x - 1, y }, gameBoard.Get_Cell({ x,y }));
                                     gameBoard.Set_Cell({ x, y }, Nothing);
@@ -637,6 +732,15 @@ void GameLoop() {
                         }
                     }
                 }
+            }
+
+            if (ZombieCurrency.Get_Cost() >= 100) {
+                gameloop = false;
+                cout << COLOR(208);
+                cout << "+----------+\n";
+                cout << "| You Win! |\n";
+                cout << "+----------+\n";
+                cout << RESET;
             }
 
             frameCount++;
