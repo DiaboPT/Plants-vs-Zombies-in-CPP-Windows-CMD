@@ -45,13 +45,10 @@ This is a command-line implementation of a **Plants vs. Zombies**-style game wri
 - **Zombie behavior variety** - More zombie types (fast, tanky, etc.).
 - **More plant variety** - Snow Peas (slows zombies down by increasing move cooldown).
 - **Plant cooldowns** - Delay before reusing the same plant.
-- **Balancing economy** - Sunflowers currently generate sun every 9 frames; might adjust to 6.
-- **Projectile-Zombie timing** - Ensures projectiles always hit zombies.
 
 ### Technical Considerations
 - **Rendering** - Layer-based system (static and updatable layers) using `std::cout`, `sleep()`, and `clear()`.
 - **Input Handling** - `getch()`.
-- **Collision Detection** - A projectile is removed when it lands on the same or further cell as a zombie and damages it.
 
 ## Architecture
 
