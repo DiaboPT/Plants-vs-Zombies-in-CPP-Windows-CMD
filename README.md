@@ -6,7 +6,7 @@ This is a command-line implementation of a **Plants vs. Zombies**-style game wri
 
 ### Boards
 
-#### Plants Board (size: `19x5`)
+#### Plants Board (size: `5x2`)
 ```
 +---+ +---+---+---+
 | C | | S | P | W | <- Plants
@@ -20,7 +20,7 @@ This is a command-line implementation of a **Plants vs. Zombies**-style game wri
 - `W` = Wall-nut (75 HP) **(Brown)**
 - Selection is highlighted **(Blue)** (`vector2(KEY_Q, KEY_E)`).
 
-#### Game Board (size: `33x11`)
+#### Game Board (size: `9x5`)
 ```
 +---+---+---+---+---+---+---+---+
 | S | P | * |   | * | Z |   |   |
@@ -45,13 +45,10 @@ This is a command-line implementation of a **Plants vs. Zombies**-style game wri
 - **Zombie behavior variety** - More zombie types (fast, tanky, etc.).
 - **More plant variety** - Snow Peas (slows zombies down by increasing move cooldown).
 - **Plant cooldowns** - Delay before reusing the same plant.
-- **Balancing economy** - Sunflowers currently generate sun every 9 frames; might adjust to 6.
-- **Projectile-Zombie timing** - Ensures projectiles always hit zombies.
 
 ### Technical Considerations
 - **Rendering** - Layer-based system (static and updatable layers) using `std::cout`, `sleep()`, and `clear()`.
 - **Input Handling** - `getch()`.
-- **Collision Detection** - A projectile is removed when it lands on the same or further cell as a zombie and damages it.
 
 ## Architecture
 
