@@ -20,6 +20,7 @@ This is a command-line implementation of a **Plants vs. Zombies**-style game wri
 - `W` = Wall-nut (75 HP) **(Brown)**
 - Selection is highlighted **(Blue)** (`vector2(KEY_Q, KEY_E)`).
 
+#### Game Board (size: `9x5`)
 ```
 +---+---+---+---+---+---+---+---+
 | S | P | * |   | * | Z |   |   |
