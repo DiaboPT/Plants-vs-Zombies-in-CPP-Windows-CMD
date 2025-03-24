@@ -1,5 +1,5 @@
-#ifndef HEADER_HPP
-#define HEADER_HPP
+// header.hpp
+#pragma once
 
 #include <iostream>
 #include <string>
@@ -22,5 +22,3 @@
 #include "GameLoop.hpp"
 
 using namespace std;
-
-#endif //HEADER_HPP
