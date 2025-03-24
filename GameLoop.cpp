@@ -1,5 +1,6 @@
 ﻿// GameLoop.cpp
 #include "header.hpp"
+#include <string>
 
 using namespace std;
 
@@ -274,7 +275,7 @@ public:
 	int Get_HP() const { return hp; }
 
 	void Set_Speed(float value) { speed = value; }
-	int Get_Speed() const { return speed; }
+	float Get_Speed() const { return speed; }
 };
 
 // GameBoard class
@@ -594,13 +595,13 @@ void GameLoop() {
 			}
 
 			// Currency Update
-			if ((frameCount % (fps * PlantCurrency.Get_Speed())) == 0) {
+			if (fmod(frameCount, fps * PlantCurrency.Get_Speed()) < 1) {
 				PlantCurrency.Add_Cost(1);
 				ZombieCurrency.Add_Cost(zombieTimeCount);
 			}
 
 			// Sunflowers Currency Update
-			if ((frameCount % (fps * Sunflower.Get_Speed())) == 0) {
+			if (fmod(frameCount, fps * Sunflower.Get_Speed()) < 1) {
 				int sunflowerCount = 0;
 
 				for (int y = 0; y < gameBoardHeight; y++) {
@@ -616,7 +617,7 @@ void GameLoop() {
 			}
 
 			// Peashooter Shoots Update
-			if ((frameCount % (fps * Peashooter.Get_Speed())) == 0) {
+			if (fmod(frameCount, fps * Peashooter.Get_Speed()) < 1) {
 
 				for (int y = 0; y < gameBoardHeight; y++) {
 					for (int x = 0; x < gameBoardWidth; x++) {
@@ -691,7 +692,7 @@ void GameLoop() {
 							}
 						}
 						else if(!hasPlantNext && !hasZombieNext) {
-							if ((frameCount % (fps * gameBoard.Get_Cell({ x,y }).Get_Speed())) == 0) {
+							if (fmod(frameCount, fps * gameBoard.Get_Cell({ x,y }).Get_Speed()) < 1) {
 
 								// If next cell is not Plant
 								if (x > 0) {
@@ -754,16 +755,6 @@ void GameLoop() {
 				}
 			}
 
-			if (ZombieCurrency.Get_Cost() >= 100) {
-				gameloop = false;
-				cout << RESET;
-				cout << "+----------+\n";
-				cout << "| You Win! |\n";
-				cout << "+----------+\n";
-				cout << RESET;
-				rest(3000);
-			}
-
 			plantsBoard.Set_Cell({ 0, 1 }, CellContent(to_string(PlantCurrency.Get_Cost()), PlantCurrency.Get_Cost(), 0));
 			zombieBoard.Set_Cell({ 0, 1 }, CellContent(to_string(ZombieCurrency.Get_Cost()), ZombieCurrency.Get_Cost(), 0));
 
@@ -789,6 +780,16 @@ void GameLoop() {
 				ResetCursor();
 				cout << output;
 				old_output = output;
+			}
+
+			if (ZombieCurrency.Get_Cost() >= 100) {
+				gameloop = false;
+				cout << RESET;
+				cout << "+----------+\n";
+				cout << "| You Win! |\n";
+				cout << "+----------+\n";
+				cout << RESET;
+				rest(3000);
 			}
 
 			frameCount++;

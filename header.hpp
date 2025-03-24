@@ -7,6 +7,7 @@
 #include <thread>
 #include <vector>
 #include <random>
+#include <cmath>
 
 #ifdef _WIN32
 #include <conio.h>
