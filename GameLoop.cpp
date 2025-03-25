@@ -490,7 +490,7 @@ void GameLoop() {
 	auto lastFrameTime = chrono::steady_clock::now();
 
 	// Important cells
-	CellContent Nothing, PlantCurrency(COLOR(220) + string("C"), 1, 0, 10), ZombieCurrency(PlantCurrency);
+	CellContent Nothing, plantsCurrency(COLOR(220) + string("C"), 1, 0, 10), zombiesCurrency(plantsCurrency);
 	int zombieTimeCount = 1;
 
 	// Define plant and zombie objects manually
@@ -518,14 +518,14 @@ void GameLoop() {
 
 	// Calculate board width dynamically
 	const int plantsBoardWidth = plantTypes.size() + 2;  // +2 for currency and empty slot
-	const int zombieBoardWidth = zombieTypes.size() + 2;
-	const int plantsBoardHeight = 2, zombieBoardHeight = 2, gameBoardWidth = 9, gameBoardHeight = 5;
+	const int zombiesBoardWidth = zombieTypes.size() + 2;
+	const int plantsBoardHeight = 2, zombiesBoardHeight = 2, gameBoardWidth = 9, gameBoardHeight = 5;
 
 	// Create the boards
 	GameBoard plantsBoard(plantsBoardWidth, plantsBoardHeight);
 	Coords plantsBoardSelection{ 2,0 };
-	GameBoard zombieBoard(zombieBoardWidth, zombieBoardHeight);
-	Coords zombieBoardSelection{ 2,0 };
+	GameBoard zombiesBoard(zombiesBoardWidth, zombiesBoardHeight);
+	Coords zombiesBoardSelection{ 2,0 };
 
 	GameBoard gameBoard(gameBoardWidth, gameBoardHeight);
 	Coords gameBoardSelection{ 0,0 };
@@ -534,7 +534,7 @@ void GameLoop() {
 	for (int y = 0; y < plantsBoardHeight; y++) {
 		for (int x = 0; x < plantsBoardWidth; x++) {
 			if (x == 0) {
-				plantsBoard.Set_Cell({ x, y }, y == 0 ? PlantCurrency : CellContent());
+				plantsBoard.Set_Cell({ x, y }, y == 0 ? plantsCurrency : CellContent());
 			}
 			else if (x == 1) {
 				plantsBoard.Set_Cell({ x, y }, CellContent()); // Empty cell
@@ -549,19 +549,19 @@ void GameLoop() {
 		}
 	}
 
-	// Populate the zombieBoard
-	for (int y = 0; y < zombieBoardHeight; y++) {
-		for (int x = 0; x < zombieBoardWidth; x++) {
+	// Populate the zombiesBoard
+	for (int y = 0; y < zombiesBoardHeight; y++) {
+		for (int x = 0; x < zombiesBoardWidth; x++) {
 			if (x == 0) {
-				zombieBoard.Set_Cell({ x, y }, y == 0 ? ZombieCurrency : CellContent());
+				zombiesBoard.Set_Cell({ x, y }, y == 0 ? zombiesCurrency : CellContent());
 			}
 			else if (x == 1) {
-				zombieBoard.Set_Cell({ x, y }, CellContent()); // Empty cell
+				zombiesBoard.Set_Cell({ x, y }, CellContent()); // Empty cell
 			}
 			else {
 				int index = x - 2;
 				if (index < zombieTypes.size()) {
-					zombieBoard.Set_Cell({ x, y }, y == 0 ? zombieTypes[index] :
+					zombiesBoard.Set_Cell({ x, y }, y == 0 ? zombieTypes[index] :
 						CellContent(to_string(zombieTypes[index].Get_Cost()), zombieTypes[index].Get_Cost(), 0));
 				}
 			}
@@ -574,9 +574,11 @@ void GameLoop() {
 		auto deltaTime = chrono::duration_cast<chrono::milliseconds>(currentTime - lastFrameTime).count();
 
 		if (deltaTime >= 1000 / fps) {
+
+			// Detects if key is press
 			if (isKeyPressed()) {
 				char key = getKeyPressed();
-				bool hasMoney = PlantCurrency.Get_Cost() >= plantsBoard.Get_Cell({ plantsBoardSelection.x, 1 }).Get_Cost();
+				bool hasMoney = plantsCurrency.Get_Cost() >= plantsBoard.Get_Cell({ plantsBoardSelection.x, 1 }).Get_Cost();
 
 				bool canPlace = true;
 				for (int i = 0; i < zombieTypes.size(); i++) {
@@ -598,7 +600,7 @@ void GameLoop() {
 				case ' ':
 					if (hasMoney && canPlace) {
 						gameBoard.Set_Cell(gameBoardSelection, plantsBoard.Get_Cell(plantsBoardSelection));
-						PlantCurrency.Add_Cost(-plantsBoard.Get_Cell({ plantsBoardSelection.x, 1 }).Get_Cost());
+						plantsCurrency.Add_Cost(-plantsBoard.Get_Cell({ plantsBoardSelection.x, 1 }).Get_Cost());
 					}
 					break;
 				case 27: gameloop = false; break;
@@ -606,9 +608,9 @@ void GameLoop() {
 			}
 
 			// Currency Update
-			if (fmod(frameCount, fps * PlantCurrency.Get_Speed()) < 1) {
-				PlantCurrency.Add_Cost(1);
-				ZombieCurrency.Add_Cost(zombieTimeCount);
+			if (fmod(frameCount, fps * plantsCurrency.Get_Speed()) < 1) {
+				plantsCurrency.Add_Cost(1);
+				zombiesCurrency.Add_Cost(zombieTimeCount);
 			}
 
 			// Sunflowers Currency Update
@@ -624,7 +626,7 @@ void GameLoop() {
 						}
 					}
 				}
-				PlantCurrency.Add_Cost(sunflowerCount);  // Increase cost based on Sunflowers
+				plantsCurrency.Add_Cost(sunflowerCount);  // Increase cost based on Sunflowers
 			}
 
 			// Peashooter Shoots Update
@@ -651,7 +653,7 @@ void GameLoop() {
 									CellContent damagedZombie = gameBoard.Get_Cell({ i , y });
 									damagedZombie.Add_HP(-1);
 									if (damagedZombie.Get_HP() > 0) { gameBoard.Set_Cell({ i , y }, damagedZombie); }
-									else { gameBoard.Set_Cell({ i , y }, Nothing); ZombieCurrency.Add_Cost(damagedZombie.Get_Cost()); }
+									else { gameBoard.Set_Cell({ i , y }, Nothing); zombiesCurrency.Add_Cost(damagedZombie.Get_Cost()); }
 									PlayZombieHitSound();
 									break;
 								}
@@ -678,7 +680,7 @@ void GameLoop() {
 											CellContent damagedZombie = gameBoard.Get_Cell({ i , j });
 											damagedZombie.Add_HP(-90);
 											if (damagedZombie.Get_HP() > 0) { gameBoard.Set_Cell({ i , j }, damagedZombie); }
-											else { gameBoard.Set_Cell({ i , j }, Nothing); ZombieCurrency.Add_Cost(damagedZombie.Get_Cost()); }
+											else { gameBoard.Set_Cell({ i , j }, Nothing); zombiesCurrency.Add_Cost(damagedZombie.Get_Cost()); }
 											PlayZombieHitSound();
 										}
 									}
@@ -690,8 +692,7 @@ void GameLoop() {
 				}
 			}
 
-			// Detects Zombies // Moves them or damages next Plant
-			// Loop the board
+			// Zombies movement + damages next Plant
 			for (int y = 0; y < gameBoardHeight; y++) {
 				for (int x = 0; x < gameBoardWidth; x++) {
 
@@ -756,14 +757,14 @@ void GameLoop() {
 				for (int x = 0; x < plantsBoardWidth; x++) {
 					for (int y = 0; y < plantsBoardHeight; y++) {
 
-						bool zombieHasMoney = ZombieCurrency.Get_Cost() >= Basic.Get_Cost();
+						bool zombieHasMoney = zombiesCurrency.Get_Cost() >= Basic.Get_Cost();
 						if (zombieHasMoney) {
 
 							if (gameBoard.Get_Cell({ gameBoardWidth - 1, y }).Get_Name() == Nothing.Get_Name()) {
 
 								CellContent zombie;
 								for (int i = zombieTypes.size() - 1; i >= 0; i--) {
-									if (ZombieCurrency.Get_Cost() >= zombieTypes[i].Get_Cost()) {
+									if (zombiesCurrency.Get_Cost() >= zombieTypes[i].Get_Cost()) {
 										zombie = zombieTypes[i];
 										zombieTimeCount++;
 										break;
@@ -787,7 +788,7 @@ void GameLoop() {
 								}
 								int randomLine = Random::FromList(possibleLines);
 								gameBoard.Set_Cell({ gameBoardWidth - 1, randomLine }, zombie);
-								ZombieCurrency.Add_Cost(-zombie.Get_Cost());
+								zombiesCurrency.Add_Cost(-zombie.Get_Cost());
 								break;
 							}
 						}
@@ -795,8 +796,8 @@ void GameLoop() {
 				}
 			}
 
-			plantsBoard.Set_Cell({ 0, 1 }, CellContent(to_string(PlantCurrency.Get_Cost()), PlantCurrency.Get_Cost(), 0));
-			zombieBoard.Set_Cell({ 0, 1 }, CellContent(to_string(ZombieCurrency.Get_Cost()), ZombieCurrency.Get_Cost(), 0));
+			plantsBoard.Set_Cell({ 0, 1 }, CellContent(to_string(plantsCurrency.Get_Cost()), plantsCurrency.Get_Cost(), 0));
+			zombiesBoard.Set_Cell({ 0, 1 }, CellContent(to_string(zombiesCurrency.Get_Cost()), zombiesCurrency.Get_Cost(), 0));
 
 			output = RESET;
 			output += "Plants Board:\n" + plantsBoard.DrawBoard(plantsBoardSelection, COLOR(46), PLANTRESET);
@@ -813,7 +814,7 @@ void GameLoop() {
 			output += gameBoard.Get_Cell(gameBoardSelection).Get_HP() > 9 ? to_string(gameBoard.Get_Cell(gameBoardSelection).Get_HP()) + " " : "0" + to_string(gameBoard.Get_Cell(gameBoardSelection).Get_HP()) + " ";
 			output += "\n";
 
-			output += "\nZombies Board:\n" + string(PLANTRESET) + zombieBoard.DrawBoard(zombieBoardSelection, COLOR(165), PLANTRESET) + '\n';
+			output += "\nZombies Board:\n" + string(PLANTRESET) + zombiesBoard.DrawBoard(zombiesBoardSelection, COLOR(165), PLANTRESET) + '\n';
 			output += RESET;
 
 			if (output != old_output) {
@@ -822,7 +823,7 @@ void GameLoop() {
 				old_output = output;
 			}
 
-			if (ZombieCurrency.Get_Cost() >= 100) {
+			if (zombiesCurrency.Get_Cost() >= 100) {
 				gameloop = false;
 				cout << RESET;
 				cout << "+----------+\n";
