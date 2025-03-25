@@ -495,33 +495,43 @@ void GameLoop() {
 	// Define plant and zombie objects manually
 	CellContent Peashooter = CellContent(COLOR(46) + string("P"), 4, 6, 1.5f);
 	CellContent Sunflower = CellContent(COLOR(220) + string("S"), 2, 6, 24.0f);
-	CellContent Wall_Nut = CellContent(COLOR(208) + string("W"), 2, 72);
+	CellContent CherryBomb = CellContent(COLOR(1) + string("C"), 6, 6, 1.2f);
+	CellContent WallNut = CellContent(COLOR(208) + string("W"), 2, 72);
 
 	CellContent Basic = CellContent(COLOR(165) + string("A"), 5, 14, 4.0f);
 	CellContent ConeHead = CellContent(COLOR(208) + string("B"), Basic.Get_Cost() * 2, Basic.Get_HP() * 2, Basic.Get_Speed());
 	CellContent BucketHead = CellContent("\033[97m" + string("C"), Basic.Get_Cost() * 3, Basic.Get_HP() * 3, Basic.Get_Speed());
 
 	// Store them in vectors
-	std::vector<CellContent> plantTypes = { Peashooter, Sunflower, Wall_Nut };
-	std::vector<CellContent> zombieTypes = { Basic, ConeHead, BucketHead };
+	std::vector<CellContent> plantTypes = {
+		Peashooter,
+		Sunflower,
+		CherryBomb,
+		WallNut
+	};
+	std::vector<CellContent> zombieTypes = {
+		Basic,
+		ConeHead,
+		BucketHead
+	};
 
 	// Calculate board width dynamically
-	const int plantBoardWidth = plantTypes.size() + 2;  // +2 for currency and empty slot
+	const int plantsBoardWidth = plantTypes.size() + 2;  // +2 for currency and empty slot
 	const int zombieBoardWidth = zombieTypes.size() + 2;
-	const int plantBoardHeight = 2, zombieBoardHeight = 2, gameBoardWidth = 9, gameBoardHeight = 5;
+	const int plantsBoardHeight = 2, zombieBoardHeight = 2, gameBoardWidth = 9, gameBoardHeight = 5;
 
 	// Create the boards
-	GameBoard plantsBoard(plantBoardWidth, plantBoardHeight);
-	Coords plantBoardSelection{ 2,0 };
+	GameBoard plantsBoard(plantsBoardWidth, plantsBoardHeight);
+	Coords plantsBoardSelection{ 2,0 };
 	GameBoard zombieBoard(zombieBoardWidth, zombieBoardHeight);
 	Coords zombieBoardSelection{ 2,0 };
 
-	GameBoard gameBoard(9, 5);
+	GameBoard gameBoard(gameBoardWidth, gameBoardHeight);
 	Coords gameBoardSelection{ 0,0 };
 
 	// Populate the plantsBoard
-	for (int y = 0; y < plantBoardHeight; y++) {
-		for (int x = 0; x < plantBoardWidth; x++) {
+	for (int y = 0; y < plantsBoardHeight; y++) {
+		for (int x = 0; x < plantsBoardWidth; x++) {
 			if (x == 0) {
 				plantsBoard.Set_Cell({ x, y }, y == 0 ? PlantCurrency : CellContent());
 			}
@@ -565,7 +575,7 @@ void GameLoop() {
 		if (deltaTime >= 1000 / fps) {
 			if (isKeyPressed()) {
 				char key = getKeyPressed();
-				bool hasMoney = PlantCurrency.Get_Cost() >= plantsBoard.Get_Cell({ plantBoardSelection.x, 1 }).Get_Cost();
+				bool hasMoney = PlantCurrency.Get_Cost() >= plantsBoard.Get_Cell({ plantsBoardSelection.x, 1 }).Get_Cost();
 
 				bool canPlace = true;
 				for (int i = 0; i < zombieTypes.size(); i++) {
@@ -576,18 +586,18 @@ void GameLoop() {
 				}
 
 				switch (key) {
-				case 'q': case 'Q': if (plantBoardSelection.x > 2) plantBoardSelection.x--; break;
-				case 'e': case 'E': if (plantBoardSelection.x < 4) plantBoardSelection.x++; break;
+				case 'q': case 'Q': if (plantsBoardSelection.x > 2) plantsBoardSelection.x--; break;
+				case 'e': case 'E': if (plantsBoardSelection.x < (plantTypes.size() + 2) - 1) plantsBoardSelection.x++; break;
 
 				case 'w': case 'W': if (gameBoardSelection.y > 0) gameBoardSelection.y--; break;
 				case 'a': case 'A': if (gameBoardSelection.x > 0) gameBoardSelection.x--; break;
-				case 's': case 'S': if (gameBoardSelection.y < 4) gameBoardSelection.y++; break;
-				case 'd': case 'D': if (gameBoardSelection.x < 8) gameBoardSelection.x++; break;
+				case 's': case 'S': if (gameBoardSelection.y < gameBoardHeight - 1) gameBoardSelection.y++; break;
+				case 'd': case 'D': if (gameBoardSelection.x < gameBoardWidth - 1) gameBoardSelection.x++; break;
 
 				case ' ':
 					if (hasMoney && canPlace) {
-						gameBoard.Set_Cell(gameBoardSelection, plantsBoard.Get_Cell(plantBoardSelection));
-						PlantCurrency.Add_Cost(-plantsBoard.Get_Cell({ plantBoardSelection.x, 1 }).Get_Cost());
+						gameBoard.Set_Cell(gameBoardSelection, plantsBoard.Get_Cell(plantsBoardSelection));
+						PlantCurrency.Add_Cost(-plantsBoard.Get_Cell({ plantsBoardSelection.x, 1 }).Get_Cost());
 					}
 					break;
 				case 27: gameloop = false; break;
@@ -639,12 +649,41 @@ void GameLoop() {
 									// Damages next cell
 									CellContent damagedZombie = gameBoard.Get_Cell({ i , y });
 									damagedZombie.Add_HP(-1);
-									if (damagedZombie.Get_HP() != 0) { gameBoard.Set_Cell({ i , y }, damagedZombie); }
-									else { gameBoard.Set_Cell({ i , y }, Nothing); ZombieCurrency.Set_Cost(damagedZombie.Get_Cost()); }
+									if (damagedZombie.Get_HP() > 0) { gameBoard.Set_Cell({ i , y }, damagedZombie); }
+									else { gameBoard.Set_Cell({ i , y }, Nothing); ZombieCurrency.Add_Cost(damagedZombie.Get_Cost()); }
 									PlayZombieHitSound();
 									break;
 								}
 							}
+						}
+					}
+				}
+			}
+
+			// Cherry Bomb Update
+			if (fmod(frameCount, fps * CherryBomb.Get_Speed()) < 1) {
+
+				for (int y = 0; y < gameBoardHeight; y++) {
+					for (int x = 0; x < gameBoardWidth; x++) {
+
+						bool hasCherryBombHere = gameBoard.Get_Cell({ x, y }).Get_Name() == CherryBomb.Get_Name();
+						if (hasCherryBombHere) {
+
+							for (int j = max(0, y - 1); j <= min(gameBoardHeight - 1, y + 1); j++) {
+								for (int i = max(0, x - 1); i <= min(gameBoardWidth - 1, x + 1); i++) {
+									for (int k = 0; k < zombieTypes.size(); k++) {
+										if (gameBoard.Get_Cell({ i , j }).Get_Name() == zombieTypes[k].Get_Name()) {
+
+											CellContent damagedZombie = gameBoard.Get_Cell({ i , j });
+											damagedZombie.Add_HP(-90);
+											if (damagedZombie.Get_HP() > 0) { gameBoard.Set_Cell({ i , j }, damagedZombie); }
+											else { gameBoard.Set_Cell({ i , j }, Nothing); ZombieCurrency.Add_Cost(damagedZombie.Get_Cost()); }
+											PlayZombieHitSound();
+										}
+									}
+								}
+							}
+							gameBoard.Set_Cell({ x , y }, Nothing);
 						}
 					}
 				}
@@ -713,8 +752,8 @@ void GameLoop() {
 			// Buy zombies
 			if ((frameCount % fps) == 0) {
 
-				for (int x = 0; x < plantBoardWidth; x++) {
-					for (int y = 0; y < plantBoardHeight; y++) {
+				for (int x = 0; x < plantsBoardWidth; x++) {
+					for (int y = 0; y < plantsBoardHeight; y++) {
 
 						bool zombieHasMoney = ZombieCurrency.Get_Cost() >= Basic.Get_Cost();
 						if (zombieHasMoney) {
@@ -759,7 +798,7 @@ void GameLoop() {
 			zombieBoard.Set_Cell({ 0, 1 }, CellContent(to_string(ZombieCurrency.Get_Cost()), ZombieCurrency.Get_Cost(), 0));
 
 			output = RESET;
-			output += "Plants Board:\n" + plantsBoard.DrawBoard(plantBoardSelection, COLOR(46), PLANTRESET);
+			output += "Plants Board:\n" + plantsBoard.DrawBoard(plantsBoardSelection, COLOR(46), PLANTRESET);
 			output += RESET;
 
 			output += "\nGame Board:\n" + gameBoard.DrawBoard(gameBoardSelection, COLOR(3), GAMERESET);
