@@ -245,6 +245,7 @@ private:
 	string name;
 
 	int cost;
+	// float cooldown;
 	int hp;
 	float speed;
 
@@ -289,7 +290,7 @@ public:
 		grid = { {0, 0}, {x, y} };
 	}
 
-	string DrawBoard(Coords selected, string selectedColor, string resetColor) {
+	const string DrawBoard(Coords selected, string selectedColor, string resetColor) {
 		string returned = resetColor;
 		returned += (selected.x == 0 && selected.y == 0 ? selectedColor + string("+") + resetColor : string("+"));
 		for (int x = 0; x < grid.size.x; x++) {
@@ -839,6 +840,7 @@ void GameLoop() {
 	cout << "\n";
 	cout << "+---------------------+\n";
 	cout << "| Thanks for playing! |\n";
+	cout << "| Time: " << to_string(frameCount / fps) << (" seconds!  ") << " |\n";
 	cout << "+---------------------+\n";
 	cout << RESET;
 }
