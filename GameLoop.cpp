@@ -827,10 +827,10 @@ void GameLoop() {
 							vector<int> possibleLines(0);
 							if (true) {
 								int k = 0;
-								for (int y = 0; y < gameBoardHeight; y++) {
-									if (gameBoard.GetCell({ gameBoardWidth - 1 , y }).Get_Name() == Nothing.Get_Name()) {
+								for (int j = 0; j < gameBoardHeight; j++) {
+									if (gameBoard.GetCell({ gameBoardWidth - 1 , j }).Get_Name() == Nothing.Get_Name()) {
 										possibleLines.resize(k + 1);
-										possibleLines[k] = y;
+										possibleLines[k] = j;
 										k++;
 									}
 								}
