@@ -882,6 +882,9 @@ void GameLoop() {
 				old_output = output;
 			}
 
+			frameCount++;
+			lastFrameTime = currentTime;
+
 			// Win
 			if (zombiesCurrency.Get_Cost() >= level.GetWinCondiction()) {
 				frameCount = 0;
@@ -968,8 +971,6 @@ void GameLoop() {
 				ClearScreen();
 			}
 
-			frameCount++;
-			lastFrameTime = currentTime;
 		}
 	}
 	cout << RESET;
