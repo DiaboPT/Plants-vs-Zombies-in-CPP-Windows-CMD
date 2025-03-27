@@ -557,12 +557,12 @@ void GameLoop() {
 	Levels level = Levels();
 
 	// Important cells
-	CellContent Nothing, plantsCurrency(COLOR(220) + string("C"), 1, 0, 10), zombiesCurrency(plantsCurrency);
+	CellContent Nothing, plantsCurrency(COLOR(220) + string("C"), 1, 0, 10 / 2), zombiesCurrency(plantsCurrency);
 	int zombieTimeCount = 1;
 
 	// Define plant and zombie objects manually
 	CellContent Peashooter = CellContent(COLOR(46) + string("P"), 4, 6, 1.5f);
-	CellContent Sunflower = CellContent(COLOR(220) + string("S"), 2, 6, 24.0f);
+	CellContent Sunflower = CellContent(COLOR(220) + string("S"), 2, 6, 24.0f / 2);
 	CellContent CherryBomb = CellContent(COLOR(1) + string("C"), 6, 6, 1.2f);
 	CellContent WallNut = CellContent(COLOR(208) + string("W"), 2, 72);
 	vector<CellContent> plantsTypes = {
@@ -572,13 +572,15 @@ void GameLoop() {
 		WallNut
 	};
 
-	CellContent Basic = CellContent(COLOR(165) + string("A"), 5, 10, 6.5f);
-	CellContent ConeHead = CellContent(COLOR(208) + string("B"), Basic.Get_Cost() * 2, Basic.Get_HP() * 2, Basic.Get_Speed());
-	CellContent BucketHead = CellContent("\033[97m" + string("C"), Basic.Get_Cost() * 3, Basic.Get_HP() * 3, Basic.Get_Speed());
+	CellContent Basic = CellContent(COLOR(165) + string("Z"), 5, 10, 6.5f);
+	CellContent ConeHead = CellContent(COLOR(208) + string("C"), Basic.Get_Cost() * 2, Basic.Get_HP() * 2, Basic.Get_Speed());
+	CellContent BucketHead = CellContent("\033[97m" + string("B"), Basic.Get_Cost() * 3, Basic.Get_HP() * 3, Basic.Get_Speed());
+	CellContent PoleVault = CellContent(COLOR(74) + string("P"), Basic.Get_Cost() * 4, Basic.Get_HP() * 2, Basic.Get_Speed() / 2);
 	vector<CellContent> zombiesTypes = {
 		Basic,
 		ConeHead,
-		BucketHead
+		BucketHead,
+		PoleVault
 	};
 
 	int i = level.GetLevel().x - 1;
@@ -861,7 +863,7 @@ void GameLoop() {
 			output += "\nPlants Board:\n" + plantsBoard.DrawBoard(plantsBoardSelection, COLOR(46), PLANTRESET);
 			output += RESET;
 
-			output += "\nGame Board:\n" + gameBoard.DrawBoard(gameBoardSelection, COLOR(3), GAMERESET);
+			output += "\nGame Board:\n" + gameBoard.DrawBoard(gameBoardSelection, COLOR(220), GAMERESET);
 			output += RESET;
 
 			output += "Selected: ";
