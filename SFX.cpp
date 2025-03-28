@@ -6,18 +6,17 @@ void rest(int duration) {
 }
 
 // Function to check if sox is installed
-static bool isSoxInstalled() {
+bool isSoxInstalled() {
     return system("which sox > /dev/null 2>&1") == 0;
 }
 
 // Function to install sox
-static void installSox() {
+void installSox() {
     std::cout << "Sox is not installed. Installing now...\n";
     int result = system("sudo apt install sox -y");
 
     if (result != 0) {
-        std::cerr << "Failed to install sox. Please install it manually.\n";
-        exit(1);
+        std::cerr << "Failed to install sox. Please install it manually or play without sound.\n";
     }
 }
 
@@ -26,9 +25,6 @@ void playNote(int frequency, int duration) {
 #ifdef _WIN32
     Beep(frequency, duration);
 #else
-    if (!isSoxInstalled()) {
-        installSox();
-    }
     std::string command = "play -n synth " + std::to_string(duration / 1000.0) +
         " sine " + std::to_string(frequency) + " > /dev/null 2>&1";
     system(command.c_str());
