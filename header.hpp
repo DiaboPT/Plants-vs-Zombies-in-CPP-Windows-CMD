@@ -2,12 +2,19 @@
 #pragma once
 
 #include <iostream>
+using std::cout;
+
 #include <string>
-#include <chrono>
+using std::to_string;
+
 #include <thread>
-#include <vector>
-#include <random>
-#include <cmath>
+using std::thread;
+using std::this_thread::sleep_for;
+using std::chrono::milliseconds;
+using std::chrono::steady_clock;
+using std::chrono::duration_cast;
+
+#include <chrono>
 
 #ifdef _WIN32
 #include <conio.h>
@@ -19,6 +26,9 @@
 #include <cstdlib>
 #endif
 
+#include "Random.hpp"
+#include "CellContent.hpp"
+#include "GameBoard.hpp"
+#include "Levels.hpp"
+#include "SFX.hpp"
 #include "GameLoop.hpp"
-
-using namespace std;

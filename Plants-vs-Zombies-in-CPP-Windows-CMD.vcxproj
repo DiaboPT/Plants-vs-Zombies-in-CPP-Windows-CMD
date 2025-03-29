@@ -19,12 +19,27 @@
     </ProjectConfiguration>
   </ItemGroup>
   <ItemGroup>
+    <ClCompile Include="CellContent.cpp" />
+    <ClCompile Include="GameBoard.cpp" />
     <ClCompile Include="GameLoop.cpp" />
+    <ClCompile Include="Levels.cpp" />
     <ClCompile Include="main.cpp" />
+    <ClCompile Include="Random.cpp" />
+    <ClCompile Include="SFX.cpp" />
   </ItemGroup>
   <ItemGroup>
+    <ClInclude Include="CellContent.hpp" />
+    <ClInclude Include="Coords.hpp" />
+    <ClInclude Include="GameBoard.hpp" />
     <ClInclude Include="GameLoop.hpp" />
     <ClInclude Include="header.hpp" />
+    <ClInclude Include="Levels.hpp" />
+    <ClInclude Include="Random.hpp" />
+    <ClInclude Include="SFX.hpp" />
+    <ClInclude Include="Transform.hpp" />
+  </ItemGroup>
+  <ItemGroup>
+    <None Include="cpp.hint" />
   </ItemGroup>
   <PropertyGroup Label="Globals">
     <VCProjectVersion>17.0</VCProjectVersion>
