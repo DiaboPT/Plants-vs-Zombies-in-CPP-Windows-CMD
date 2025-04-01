@@ -20,6 +20,7 @@
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="CellContent.cpp" />
+    <ClCompile Include="FrameWork.cpp" />
     <ClCompile Include="GameBoard.cpp" />
     <ClCompile Include="GameLoop.cpp" />
     <ClCompile Include="Levels.cpp" />
@@ -30,6 +31,7 @@
   <ItemGroup>
     <ClInclude Include="CellContent.hpp" />
     <ClInclude Include="Coords.hpp" />
+    <ClInclude Include="FrameWork.hpp" />
     <ClInclude Include="GameBoard.hpp" />
     <ClInclude Include="GameLoop.hpp" />
     <ClInclude Include="header.hpp" />
