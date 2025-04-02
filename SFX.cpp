@@ -1,16 +1,16 @@
 #include "SFX.hpp"
 
-// Helper function to create a rest between sections (helps add phrasing)
+// Helper std::function to create a rest between sections (helps add phrasing)
 void rest(int duration) {
-    sleep_for(milliseconds(duration));
+    std::this_thread::sleep_for(std::chrono::milliseconds(duration));
 }
 
-// Function to check if sox is installed
+// std::function to check if sox is installed
 bool isSoxInstalled() {
     return system("which sox > /dev/null 2>&1") == 0;
 }
 
-// Function to install sox
+// std::function to install sox
 void installSox() {
     std::cout << "Sox is not installed. Installing now...\n";
     int result = system("sudo apt install sox -y");
@@ -20,20 +20,20 @@ void installSox() {
     }
 }
 
-// Modified playNote function
+// Modified playNote std::function
 void playNote(int frequency, int duration) {
 #ifdef _WIN32
     Beep(frequency, duration);
 #else
-    std::string command = "play -n synth " + std::to_string(duration / 1000.0) +
-        " sine " + std::to_string(frequency) + " > /dev/null 2>&1";
+    std::string command = "play -n synth " + std::std::to_string(duration / 1000.0) +
+        " sine " + std::std::to_string(frequency) + " > /dev/null 2>&1";
     system(command.c_str());
 #endif
     rest(50);
 }
 
 void GrasswalkSong() {
-    thread([] {
+    std::thread([] {
         while (true) {
             playNote(E4, 400); // E
             playNote(E4, 400); // E
@@ -86,7 +86,7 @@ void GrasswalkSong() {
 }
 
 void PlayZombieBiteSound() {
-    thread([] {
+    std::thread([] {
         playNote(C4, 100); // Low-frequency bite
         playNote(F4, 120); // Mid-range crunch
         playNote(G4, 80);  // Tearing sound
@@ -94,7 +94,7 @@ void PlayZombieBiteSound() {
 }
 
 void PlayZombieHitSound() {
-    thread([] {
+    std::thread([] {
         playNote(C5, 50);  // Quick high-pitch "impact"
         playNote(D4, 70);  // Slightly lower "reverberation"
         }).detach();

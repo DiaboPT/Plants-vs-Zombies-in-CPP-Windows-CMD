@@ -20,7 +20,7 @@ public:
 	CellContent(string new_name, int new_cost, int new_hp, float new_speed);
 
 	void Set_Name(string value);
-	const string Get_Name() const;
+	const std::string Get_Name() const;
 
 	void Set_Cost(int value);
 	void Add_Cost(int value);

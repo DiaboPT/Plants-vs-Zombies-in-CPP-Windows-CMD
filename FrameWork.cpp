@@ -1,7 +1,7 @@
 // FrameWork.cpp
 #include "FrameWork.hpp"
 
-void InitWindow(int width, int height) {
+void SetConsoleSize(int width, int height) {
 #ifdef _WIN32
 	HWND console = GetConsoleWindow(); // Get console window handle
 	if (!console) return;
@@ -10,7 +10,7 @@ void InitWindow(int width, int height) {
 	MoveWindow(console, 100, 100, width, height, TRUE);
 #else
 	// For Linux, using stty for terminal resizing
-	string command = "stty cols " + to_string(width) + " rows " + to_string(height);
+	string command = "stty cols " + std::to_string(width) + " rows " + std::to_string(height);
 	system(command.c_str());  // Execute the command to resize the terminal
 #endif
 }
@@ -25,7 +25,7 @@ void SetConsoleFontSize(int size) {
 	SetCurrentConsoleFontEx(output, false, &info);
 #else
 	// Assuming you are on GNOME or similar
-	string command = "gsettings set org.gnome.desktop.interface monospace-font-name 'Monospace " + to_string(size) + "'";
+	string command = "gsettings set org.gnome.desktop.interface monospace-font-name 'Monospace " + std::to_string(size) + "'";
 	system(command.c_str());  // Execute the command to change font size
 #endif
 }
@@ -43,17 +43,17 @@ void ClearScreen() {
 	std::cout << "\033[2J\033[H"; // ANSI escape for clearing console
 }
 
-void RenderFrame(const string& output, string& old_output) { // Pass old_output by reference
+void RenderFrame(const std::string& output, std::string& old_output) { // Pass old_output by reference
 	if (output != old_output) {
 		ResetCursor();
-		cout << output;
+		std::cout << output;
 		old_output = output; // Now this persists across frames
 	}
 }
 
 // Moves cursor to the top-left instead of clearing the screen
 void ResetCursor() {
-	cout << "\033[H"; // ANSI escape sequence for resetting cursor
+	std::cout << "\033[H"; // ANSI escape sequence for resetting cursor
 }
 
 // Cross-platform kbhit() equivalent for Linux
@@ -107,41 +107,25 @@ char getKeyPressed() {
 #endif
 }
 
-void Start(bool& gameloop, function<void()> func) {
+void Start(bool& gameloop, std::function<void()> func) {
 	enableANSI();
 	gameloop = true;  // Ensure gameloop is set before running func
 	func();
 }
 
-// InputEvents will trigger the appropriate function for the key press
-void InputEvents(char key, const std::unordered_map<char, std::function<void()>>& keyActions) {
-	auto it = keyActions.find(key);  // Check if the key exists in the map
-	if (it != keyActions.end()) {
-		it->second();  // Call the function associated with the key
-	}
-	else {
-		std::cout << "No action assigned for key '" << key << "'." << std::endl;
-	}
-}
-
-void Update(bool& gameloop, string& output, float fps, function<void()> func) {
-	static string old_output = "";
-	auto lastFrameTime = steady_clock::now();
+void Update(bool& gameloop, std::string& output, float fps, std::function<void()> func) {
+	static std::string old_output = "";
+	auto lastFrameTime = std::chrono::steady_clock::now();
 
 	while (gameloop) {
-		auto currentTime = steady_clock::now();
-		auto deltaTime = duration_cast<milliseconds>(currentTime - lastFrameTime).count();
+		auto currentTime = std::chrono::steady_clock::now();
+		auto deltaTime = std::chrono::duration_cast<std::chrono::milliseconds>(currentTime - lastFrameTime).count();
 
 		if (deltaTime >= 1000 / fps) {
-			if (isKeyPressed()) {
-				char key = getKeyPressed();
-				// InputEvents(key, keyActions);
-			}
-
 			func();
 			RenderFrame(output, old_output);
 			output = "";
-			lastFrameTime = steady_clock::now();
+			lastFrameTime = std::chrono::steady_clock::now();
 		}
 	}
 }

@@ -15,7 +15,7 @@ CellContent::CellContent(string new_name, int new_cost, int new_hp, float new_sp
 }
 
 void CellContent::Set_Name(string value) { name = value; }
-const string CellContent::Get_Name() const { return name; }
+const std::string CellContent::Get_Name() const { return name; }
 
 void CellContent::Set_Cost(int value) { cost = value; }
 void CellContent::Add_Cost(int value) { cost += value; }

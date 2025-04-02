@@ -3,11 +3,8 @@
 #define FRAMEWORK_HPP
 
 #include <iostream>
-using std::cout;
 
 #include <string>
-using std::string;
-using std::to_string;
 
 #ifdef _WIN32
 #include <conio.h>
@@ -18,15 +15,10 @@ using std::to_string;
 #endif
 
 #include <chrono>
-using std::chrono::milliseconds;
-using std::chrono::steady_clock;
-using std::chrono::duration_cast;
 
-#include <functional>  // Needed for std::function
-using std::function;
+#include <functional>
 
 #include <unordered_map>
-using std::unordered_map;
 
 // Define USE_OPENGL if compiling for OpenGL
 #ifdef USE_OPENGL
@@ -34,7 +26,7 @@ using std::unordered_map;
 #include <GLFW/glfw3.h>
 #endif
 
-void InitWindow(int width, int height);
+void SetConsoleSize(int width, int height);
 
 void SetConsoleFontSize(int size);
 
@@ -46,7 +38,7 @@ constexpr auto RESET = "\033[0m";
 // Clears the console.
 void ClearScreen();
 
-void RenderFrame(const string& output, string& old_output);
+void RenderFrame(const std::string& output, std::string& old_output);
 
 // Moves cursor to the top-left instead of clearing the screen
 void ResetCursor();
@@ -61,17 +53,8 @@ struct Coords {
     int x, y, z;
 };
 
-class InputHandler {
-public:
-	unordered_map<char, function<void()>> keyBindings;
+void Start(bool &gameloop, std::function<void()> func);
 
-	void RegisterKey(char key, function<void()> action);
-
-	void HandleInput();
-};
-
-void Start(bool &gameloop, function<void()> func);
-
-void Update(bool& gameloop, string& output, float fps, function<void()> func);
+void Update(bool& gameloop, std::string& output, float fps, std::function<void()> func);
 
 #endif //FRAMEWORK_HPP

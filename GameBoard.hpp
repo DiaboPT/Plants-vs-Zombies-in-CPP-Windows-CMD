@@ -3,19 +3,20 @@
 #include <vector>
 using std::vector;
 
-#include "Transform.hpp"
+#include "FrameWork.hpp"
 #include "CellContent.hpp"
 
 // GameBoard class
 class GameBoard {
 private:
-	Transform grid;
+	Coords grid;
 	vector<vector<CellContent>> cell;
 
 public:
 	GameBoard(int x, int y);
+	GameBoard();
 
-	const string DrawBoard(Coords selected, string selectedColor, string resetColor);
+	const std::string DrawBoard(Coords selected, std::string selectedColor, std::string resetColor);
 
 	void SetCell(Coords coords, CellContent value);
 	const CellContent GetCell(Coords coords) const;

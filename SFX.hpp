@@ -13,16 +13,16 @@ const int A4 = 440;
 const int B4 = 466;
 const int C5 = 523;
 
-// Function to check if sox is installed
+// std::function to check if sox is installed
 bool isSoxInstalled();
 
-// Function to install sox
+// std::function to install sox
 void installSox();
 
-// Helper function to create a rest between sections (helps add phrasing)
+// Helper std::function to create a rest between sections (helps add phrasing)
 void rest(int duration);
 
-// Helper function to play a note with a specified frequency and duration
+// Helper std::function to play a note with a specified frequency and duration
 void playNote(int frequency, int duration);
 
 void GrasswalkSong();

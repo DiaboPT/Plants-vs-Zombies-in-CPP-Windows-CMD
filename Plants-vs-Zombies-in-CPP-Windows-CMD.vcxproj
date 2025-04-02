@@ -30,7 +30,6 @@
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="CellContent.hpp" />
-    <ClInclude Include="Coords.hpp" />
     <ClInclude Include="FrameWork.hpp" />
     <ClInclude Include="GameBoard.hpp" />
     <ClInclude Include="GameLoop.hpp" />
@@ -38,7 +37,6 @@
     <ClInclude Include="Levels.hpp" />
     <ClInclude Include="Random.hpp" />
     <ClInclude Include="SFX.hpp" />
-    <ClInclude Include="Transform.hpp" />
   </ItemGroup>
   <ItemGroup>
     <None Include="cpp.hint" />
