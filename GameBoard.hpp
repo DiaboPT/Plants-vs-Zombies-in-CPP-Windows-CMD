@@ -1,7 +1,6 @@
 #pragma once
 
 #include <vector>
-using std::vector;
 
 #include "FrameWork.hpp"
 #include "CellContent.hpp"
@@ -10,7 +9,7 @@ using std::vector;
 class GameBoard {
 private:
 	Coords grid;
-	vector<vector<CellContent>> cell;
+	std::vector<std::vector<CellContent>> cell;
 
 public:
 	GameBoard(int x, int y);

@@ -44,9 +44,6 @@
     <ClInclude Include="GameLoop.hpp">
       <Filter>Header Files</Filter>
     </ClInclude>
-    <ClInclude Include="header.hpp">
-      <Filter>Header Files</Filter>
-    </ClInclude>
     <ClInclude Include="Random.hpp">
       <Filter>Header Files</Filter>
     </ClInclude>

@@ -1,6 +1,6 @@
 #include "GameBoard.hpp"
 
-GameBoard::GameBoard(int x, int y) : cell(x, vector<CellContent>(y)) {
+GameBoard::GameBoard(int x, int y) : cell(x, std::vector<CellContent>(y)) {
 	grid = { x, y };
 }
 
@@ -9,7 +9,7 @@ GameBoard::GameBoard() {
 }
 
 const std::string GameBoard::DrawBoard(Coords selected, std::string selectedColor, std::string resetColor) {
-	string returned = resetColor;
+	std::string returned = resetColor;
 	returned += (selected.x == 0 && selected.y == 0 ? selectedColor + std::string("+") + resetColor : std::string("+"));
 	for (int x = 0; x < grid.x; x++) {
 		returned += selected.x == x && selected.y == 0 ? selectedColor + std::string("---") + resetColor : std::string("---");

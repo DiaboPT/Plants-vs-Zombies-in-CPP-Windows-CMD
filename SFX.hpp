@@ -1,7 +1,17 @@
 // SFX.hpp
 #pragma once
 
-#include "header.hpp"
+#include <iostream>
+#include <thread>
+
+#ifdef _WIN32
+#include <windows.h>
+#else
+#include <termios.h>
+#include <unistd.h>
+#include <fcntl.h>
+#include <cstdlib>
+#endif
 
 // Notes frequencies (in Hz)
 const int C4 = 261;

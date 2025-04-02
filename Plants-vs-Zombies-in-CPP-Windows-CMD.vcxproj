@@ -33,7 +33,6 @@
     <ClInclude Include="FrameWork.hpp" />
     <ClInclude Include="GameBoard.hpp" />
     <ClInclude Include="GameLoop.hpp" />
-    <ClInclude Include="header.hpp" />
     <ClInclude Include="Levels.hpp" />
     <ClInclude Include="Random.hpp" />
     <ClInclude Include="SFX.hpp" />
@@ -50,11 +49,11 @@
   </PropertyGroup>
   <Import Project="$(VCTargetsPath)\Microsoft.Cpp.Default.props" />
   <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'" Label="Configuration">
-    <ConfigurationType>Application</ConfigurationType>
-    <UseDebugLibraries>true</UseDebugLibraries>
-    <PlatformToolset>v143</PlatformToolset>
-    <CharacterSet>Unicode</CharacterSet>
-  </PropertyGroup>
+  <ConfigurationType>Application</ConfigurationType>
+  <UseDebugLibraries>true</UseDebugLibraries>
+  <PlatformToolset>v143</PlatformToolset>
+  <CharacterSet>Unicode</CharacterSet>
+</PropertyGroup>
   <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Release|Win32'" Label="Configuration">
     <ConfigurationType>Application</ConfigurationType>
     <UseDebugLibraries>false</UseDebugLibraries>

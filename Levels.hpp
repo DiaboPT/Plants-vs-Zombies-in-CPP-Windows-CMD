@@ -1,6 +1,9 @@
 #pragma once
 
-#include "header.hpp"
+#include <vector>
+
+#include "FrameWork.hpp"
+#include "CellContent.hpp"
 
 class Levels {
 private:
@@ -8,8 +11,8 @@ private:
 	Coords level = { 0 , 0 };
 	float winCondiction = 0.0f;
 
-	vector<CellContent> plantsTypes;
-	vector<CellContent> zombiesTypes;
+	std::vector<CellContent> plantsTypes;
+	std::vector<CellContent> zombiesTypes;
 public:
 	Levels();
 
@@ -21,17 +24,17 @@ public:
 	float GetWinCondiction() const;
 
 	// Pass by reference to avoid copying
-	void SetPlantsTypes(const vector<CellContent> value);
+	void SetPlantsTypes(const std::vector<CellContent> value);
 
 	// Pass by reference to avoid copying
 	void AddPlantsTypes(const CellContent value);
 
 	// Return by const reference to avoid copying
-	const vector<CellContent> GetPlantsTypes() const;
+	const std::vector<CellContent> GetPlantsTypes() const;
 
-	void SetZombiesTypes(const vector<CellContent> value);
+	void SetZombiesTypes(const std::vector<CellContent> value);
 
 	void AddZombiesTypes(const CellContent value);
 
-	const vector<CellContent> GetZombiesTypes() const;
+	const std::vector<CellContent> GetZombiesTypes() const;
 };

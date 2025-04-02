@@ -1,206 +1,42 @@
 ﻿// GameLoop.cpp
-#include "header.hpp"
-#include "FrameWork.hpp"
-using std::max;
-using std::min;
+
+#include "GameLoop.hpp"
 
 #define PLANTRESET COLOR(208)
 #define GAMERESET  COLOR(46)
 
-bool static Menu() {
-#ifndef _WIN32
-	if (!isSoxInstalled()) {
-		installSox();
-		getKeyPressed();
-	}
-#endif
-	ClearScreen();
-	bool returned = false;
-	char key = 'A';
-	int selection = 0;
-	bool menuloop = true;
-	while (menuloop) {
-		ResetCursor();
-		std::cout << COLOR(46) << "+-" << "------" << "---" << "---------" << "------" << "-----" << "------" << "------" << "------" << "---" << "-----" << "---" << "-----" << "-+" << RESET << "\n";
-		std::cout << COLOR(46) << "| " << COLOR(46) << "PPPPP " << "   " << COLOR(46) << "VV     VV" << " SSSS " << "     " << COLOR(165) << "ZZZZZZ" << "      " << COLOR(46) << " CCCCC" << "   " << "  +  " << "   " << "  +  " << COLOR(46) << " |" << "\n";
-		std::cout << COLOR(208) << "| " << COLOR(46) << "PP  PP" << "   " << COLOR(208) << " VV   VV " << "SS   S" << "     " << COLOR(165) << "   ZZ " << "      " << COLOR(208) << "CCC   " << "   " << "  +  " << "   " << "  +  " << COLOR(208) << " |" << "\n";
-		std::cout << COLOR(208) << "| " << COLOR(46) << "PPPPP " << "   " << COLOR(208) << "  VV VV  " << "  SS  " << "     " << COLOR(165) << "  ZZ  " << "      " << COLOR(208) << "CC    " << "   " << "+++++" << "   " << "+++++" << COLOR(208) << " |" << "\n";
-		std::cout << COLOR(208) << "| " << COLOR(46) << "PP    " << "   " << COLOR(208) << "   VVV   " << "S   SS" << "..   " << COLOR(165) << " ZZ   " << "      " << COLOR(208) << "CCC   " << "   " << "  +  " << "   " << "  +  " << COLOR(208) << " |" << "\n";
-		std::cout << COLOR(208) << "| " << COLOR(46) << "PP    " << "   " << COLOR(208) << "    V    " << " SSSS " << "..   " << COLOR(165) << "ZZZZZZ" << "      " << COLOR(208) << " CCCCC" << "   " << "  +  " << "   " << "  +  " << COLOR(208) << " |" << "\n";
-		std::cout << COLOR(208) << "+-" << "------" << "---" << "---------" << "------" << "-----" << "------" << "------" << "------" << "---" << "-----" << "---" << "-----" << "-+" << RESET << "\n";
-
-		std::cout << RESET;
-		std::cout << "| " << "        Menu Keys         " << " |" << "\n";
-		std::cout << "+-" << "--------------------------" << "-+" << "\n";
-		std::cout << "| " << "     W | Move up          " << " |" << "\n";
-		std::cout << "| " << "     S | Move down        " << " |" << "\n";
-		std::cout << "+-" << "--------------------------" << "-+" << "\n";
-		std::cout << "| " << "      Overall Keys        " << " |" << "\n";
-		std::cout << "+-" << "--------------------------" << "-+" << "\n";
-		std::cout << "| " << " Space | Select           " << " |" << "\n";
-		std::cout << "| " << "Escape | Exit             " << " |" << "\n";
-		std::cout << "+-" << "--------------------------" << "-+" << "\n";
-
-		std::cout << "| " << " Options " << " |" << "\n";
-		std::cout << "+-----------+" << "\n";
-		std::cout << "| " << ((selection == 0) ? COLOR(46) + string("> Start <") + RESET + string(" |") : string("  Start   |")) << "\n";
-		std::cout << "| " << ((selection == 1) ? COLOR(46) + string("> Guide <") + RESET + string(" | <- Recommended") : string("  Guide   | <- Recommended")) + string("\n");
-		std::cout << "| " << ((selection == 2) ? COLOR(46) + string("> Quit  <") + RESET + string(" |") : string("  Quit    |")) << "\n";
-		std::cout << "+-----------+" << "\n";
-
-		key = getKeyPressed();
-		switch (key) {
-		case 'w':
-		case 'W':
-			if (selection > 0) selection--;
-			break;
-		case 's':
-		case 'S':
-			if (selection < 2) selection++;
-			break;
-
-		case ' ':
-			switch (selection) {
-			case 0:
-				menuloop = false;
-				returned = true;
-				break;
-			case 1:
-				for (int i = 1; i <= 4; i++) {
-					switch (i) {
-					case 1:
-						ClearScreen();
-
-						std::cout << "Plants Board is where the plants are and where you can select them" << "\n";
-						std::cout << "\n";
-
-						std::cout << "+---+---+---+-----+                                " << "\n";
-						std::cout << "| C |   | P | ... | <- Plants (Colored if selected)" << "\n";
-						std::cout << "+---+---+---+-----+                                " << "\n";
-						std::cout << "| A |   | B | ... | <- Cost of the plant on top    " << "\n";
-						std::cout << "+---+---+---+-----+                                " << "\n";
-						std::cout << "\n";
-
-						std::cout << "C - Currency / A - Your currency right now                  " << "\n";
-						std::cout << "P - Plant    / B - Currency you need in A to place the plant" << "\n";
-						std::cout << "\n";
-
-						std::cout << "Keys for Plants Board:" << "\n";
-						std::cout << "- Q - Move to the left in the Plant Board" << "\n";
-						std::cout << "- E - Move to the right in the Plant Board" << "\n";
-						std::cout << "\n";
-
-						getKeyPressed();
-						break;
-					case 2:
-						ClearScreen();
-
-						std::cout << "Game Board is where you can place plants to actually affect the game" << "\n";
-						std::cout << "\n";
-
-						std::cout << "+---+---+---+-----+" << "\n";
-						std::cout << "| S | P |   | ... |" << "\n";
-						std::cout << "+---+---+---+-----+" << "\n";
-						std::cout << "| S |   |   | ... |" << "\n";
-						std::cout << "+---+---+---+-----+" << "\n";
-						std::cout << "|   | W | A | ... |" << "\n";
-						std::cout << "+---+---+---+-----+" << "\n";
-						std::cout << "|   | W | B | ... |" << "\n";
-						std::cout << "+---+---+---+-----+" << "\n";
-						std::cout << "|   |   | C | ... |" << "\n";
-						std::cout << "+---+---+---+-----+" << "\n";
-						std::cout << "\n";
-
-						std::cout << "S - Sunflower   (Plant  - gives more currency each time)" << "\n";
-						std::cout << "P - Peashooter  (Plant  - kills zombies)" << "\n";
-						std::cout << "W - Wall-Nut    (Plant  - tanky)" << "\n";
-						std::cout << "\n";
-
-						std::cout << "A - Basic       (Zombie - normal)" << "\n";
-						std::cout << "B - Cone-Head   (Zombie - double stats from Basic)" << "\n";
-						std::cout << "C - Bucket-Head (Zombie - triple stats from Basic)" << "\n";
-						std::cout << "\n";
-
-						std::cout << "Keys for Plants Board:" << "\n";
-						std::cout << "- W - Move to the up in the Game Board" << "\n";
-						std::cout << "- A - Move to the left in the Game Board" << "\n";
-						std::cout << "- S - Move to the down in the Game Board" << "\n";
-						std::cout << "- D - Move to the right in the Game Board" << "\n";
-						std::cout << "\n";
-
-						getKeyPressed();
-						break;
-					case 3:
-						ClearScreen();
-
-						std::cout << "Zombie Board is where the zombies are and where the pc can select them" << "\n";
-						std::cout << "\n";
-
-						std::cout << "+---+---+---+-----+                                 " << "\n";
-						std::cout << "| C |   | Z | ... | <- Zombies (Colored if selected)" << "\n";
-						std::cout << "+---+---+---+-----+                                 " << "\n";
-						std::cout << "| A |   | B | ... | <- Cost of the zombie on top    " << "\n";
-						std::cout << "+---+---+---+-----+                                 " << "\n";
-						std::cout << "\n";
-
-						std::cout << "C - Currency / A - Pc currency right now                   " << "\n";
-						std::cout << "Z - Zombie   / B - Currency pc needs in A to place a zombie" << "\n";
-						std::cout << "\n";
-
-						getKeyPressed();
-						break;
-					case 4:
-						ClearScreen();
-
-						std::cout << "Objective: Survive";
-						std::cout << "\n";
-
-						getKeyPressed();
-						break;
-					}
-
-					ClearScreen();
-
-				}
-				break;
-			case 2:
-				menuloop = false;
-				break;
-			}
-			break;
-		case 27:
-			menuloop = false;
-			break;
-		}
-	}
-	return returned;
-}
-
-// GameLoop std::function with Linux compatibility
+// GameLoop function with Linux compatibility
 void GameLoop() {
 
+	// Console and console font size
 	SetConsoleFontSize(26);
 	SetConsoleSize(1600, 900);
 
-	int frameCount = 0;
+	// Game Start & Update Requirements
 	bool gameloop = false;
 	const int fps = 60;
-	string output = "", old_output = "";
-	Levels level = Levels();
+	std::string output = "", old_output = "";
 
+	// Extra Inicializations for especific game
+	Levels level = Levels();
+	int frameCount = 0;
+
+	// Importante Cells
 	CellContent Nothing, plantsCurrency, zombiesCurrency;
 	int zombieTimeCount = 0;
 
+	// Plants Cells
 	CellContent Peashooter, Sunflower, CherryBomb, WallNut;
-	vector<CellContent> plantsTypes;
+	std::vector<CellContent> plantsTypes;
 
+	// Zombies Cells
 	CellContent Basic, ConeHead, BucketHead, PoleVault;
-	vector<CellContent> zombiesTypes;
+	std::vector<CellContent> zombiesTypes;
 
-	int plantsBoardWidth = 0, zombiesBoardWidth = 0, plantsBoardHeight = 0, zombiesBoardHeight = 0, gameBoardWidth = 0, gameBoardHeight = 0;
-
-	GameBoard plantsBoard = GameBoard(), zombiesBoard = GameBoard(), gameBoard = GameBoard();
-	Coords plantsBoardSelection{ 0 , 0 }, zombiesBoardSelection{ 0 , 0 }, gameBoardSelection{ 0 , 0 };
+	// Boards Size
+	int plantsBoardWidth = 0, plantsBoardHeight = 0, zombiesBoardWidth = 0, zombiesBoardHeight = 0, gameBoardWidth = 0, gameBoardHeight = 0;
+	GameBoard plantsBoard, zombiesBoard, gameBoard;
+	Coords plantsBoardSelection{}, zombiesBoardSelection{}, gameBoardSelection{};
 
 	// Start
 	Start(gameloop,
@@ -491,7 +327,7 @@ void GameLoop() {
 								}
 							}
 
-							vector<int> possibleLines(0);
+							std::vector<int> possibleLines(0);
 							if (true) {
 								int k = 0;
 								for (int j = 0; j < gameBoardHeight; j++) {
@@ -638,6 +474,8 @@ void GameLoop() {
 			frameCount++;
 
 		});
+
+	ClearScreen();
 
 	std::cout << RESET;
 	std::cout << "\n";

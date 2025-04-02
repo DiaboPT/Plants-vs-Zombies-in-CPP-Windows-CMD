@@ -25,7 +25,7 @@ float Levels::GetWinCondiction() const {
 }
 
 // Pass by reference to avoid copying
-void Levels::SetPlantsTypes(const vector<CellContent> value) {
+void Levels::SetPlantsTypes(const std::vector<CellContent> value) {
 	plantsTypes = value;
 }
 
@@ -35,11 +35,11 @@ void Levels::AddPlantsTypes(const CellContent value) {
 }
 
 // Return by const reference to avoid copying
-const vector<CellContent> Levels::GetPlantsTypes() const {
+const std::vector<CellContent> Levels::GetPlantsTypes() const {
 	return plantsTypes;
 }
 
-void Levels::SetZombiesTypes(const vector<CellContent> value) {
+void Levels::SetZombiesTypes(const std::vector<CellContent> value) {
 	zombiesTypes = value;
 }
 
@@ -47,6 +47,6 @@ void Levels::AddZombiesTypes(const CellContent value) {
 	zombiesTypes.push_back(value);
 }
 
-const vector<CellContent> Levels::GetZombiesTypes() const {
+const std::vector<CellContent> Levels::GetZombiesTypes() const {
 	return zombiesTypes;
 }

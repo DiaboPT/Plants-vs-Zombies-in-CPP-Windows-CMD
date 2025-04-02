@@ -18,14 +18,6 @@
 
 #include <functional>
 
-#include <unordered_map>
-
-// Define USE_OPENGL if compiling for OpenGL
-#ifdef USE_OPENGL
-#include <GL/glew.h>
-#include <GLFW/glfw3.h>
-#endif
-
 void SetConsoleSize(int width, int height);
 
 void SetConsoleFontSize(int size);

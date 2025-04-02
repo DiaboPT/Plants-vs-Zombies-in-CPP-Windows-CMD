@@ -2,19 +2,19 @@
 
 CellContent::CellContent() : name(" "), cost(0), hp(0), speed(0) {}
 
-CellContent::CellContent(string new_name, int new_cost)
+CellContent::CellContent(std::string new_name, int new_cost)
 	: name(new_name), cost(new_cost), hp(0), speed(0) {
 }
 
-CellContent::CellContent(string new_name, int new_cost, int new_hp)
+CellContent::CellContent(std::string new_name, int new_cost, int new_hp)
 	: name(new_name), cost(new_cost), hp(new_hp), speed(0) {
 }
 
-CellContent::CellContent(string new_name, int new_cost, int new_hp, float new_speed)
+CellContent::CellContent(std::string new_name, int new_cost, int new_hp, float new_speed)
 	: name(new_name), cost(new_cost), speed(new_speed), hp(new_hp) {
 }
 
-void CellContent::Set_Name(string value) { name = value; }
+void CellContent::Set_Name(std::string value) { name = value; }
 const std::string CellContent::Get_Name() const { return name; }
 
 void CellContent::Set_Cost(int value) { cost = value; }
