@@ -129,4 +129,3 @@ void Update(bool& gameloop, std::string& output, float fps, std::function<void()
 		}
 	}
 }
-

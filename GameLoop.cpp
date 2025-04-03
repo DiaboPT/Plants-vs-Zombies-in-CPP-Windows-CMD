@@ -378,15 +378,9 @@ void GameLoop() {
 			output += "\nZombies Board:\n" + std::string(PLANTRESET) + zombiesBoard.DrawBoard(zombiesBoardSelection, COLOR(165), PLANTRESET) + '\n';
 			output += RESET;
 
-			// Draw on screen
-			if (output != old_output) {
-				ResetCursor();
-				std::cout << output;
-				old_output = output;
-			}
-
 			// Win
 			if (zombiesCurrency.Get_Cost() >= level.GetWinCondiction()) {
+
 				frameCount = 0;
 				plantsCurrency = CellContent(COLOR(220) + std::string("C"), 1, 0, 10);
 				zombiesCurrency = plantsCurrency;
@@ -462,6 +456,7 @@ void GameLoop() {
 					}
 				}
 
+				output = "";
 				ClearScreen();
 				std::cout << RESET;
 				std::cout << "+----------+\n";
