@@ -8,7 +8,7 @@
 // GameLoop function with Linux compatibility
 void GameLoop() {
 
-	// Console and console font size
+	// Console and Consoles Font size
 	SetConsoleFontSize(26);
 	SetConsoleSize(1600, 900);
 
@@ -16,10 +16,11 @@ void GameLoop() {
 	bool gameloop = false;
 	const int fps = 60;
 	std::string output = "", old_output = "";
+	int frameCount = 0;
 
 	// Extra Inicializations for especific game
+
 	Levels level = Levels();
-	int frameCount = 0;
 
 	// Importante Cells
 	CellContent Nothing, plantsCurrency, zombiesCurrency;
@@ -46,7 +47,7 @@ void GameLoop() {
 			zombiesCurrency = CellContent(plantsCurrency);
 			zombieTimeCount = 1;
 
-			// Define plant and zombie objects manually
+			// Define plant objects manually
 			Peashooter = CellContent(COLOR(46) + std::string("P"), 4, 6, 1.5f);
 			Sunflower = CellContent(COLOR(220) + std::string("S"), 2, 6, 24.0f / 2);
 			CherryBomb = CellContent(COLOR(1) + std::string("C"), 6, 6, 1.2f);
@@ -58,6 +59,7 @@ void GameLoop() {
 				WallNut
 			};
 
+			// Define zombie objects manually
 			Basic = CellContent(COLOR(165) + std::string("Z"), 5, 10, 6.5f);
 			ConeHead = CellContent(COLOR(208) + std::string("C"), Basic.Get_Cost() * 2, Basic.Get_HP() * 2, Basic.Get_Speed());
 			BucketHead = CellContent("\033[97m" + std::string("B"), Basic.Get_Cost() * 3, Basic.Get_HP() * 3, Basic.Get_Speed());
