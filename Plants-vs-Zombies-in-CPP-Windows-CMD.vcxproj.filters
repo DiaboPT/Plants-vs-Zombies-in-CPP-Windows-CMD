@@ -36,7 +36,7 @@
     <ClCompile Include="SFX.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
-    <ClCompile Include="FrameWork.cpp">
+    <ClCompile Include="cppFrameWork\FrameWork.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
   </ItemGroup>
@@ -59,7 +59,7 @@
     <ClInclude Include="SFX.hpp">
       <Filter>Header Files</Filter>
     </ClInclude>
-    <ClInclude Include="FrameWork.hpp">
+    <ClInclude Include="cppFrameWork\FrameWork.hpp">
       <Filter>Header Files</Filter>
     </ClInclude>
   </ItemGroup>

@@ -2,8 +2,8 @@
 
 #include <vector>
 
-#include "FrameWork.hpp"
 #include "CellContent.hpp"
+#include "cppFrameWork/FrameWork.hpp"
 
 // GameBoard class
 class GameBoard {
