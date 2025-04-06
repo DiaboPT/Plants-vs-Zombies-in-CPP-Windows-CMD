@@ -14,7 +14,7 @@ void Levels::AddLevel() {
 	}
 }
 Coords Levels::GetLevel() const {
-	return { level.x + 1 , level.y + 1 };
+	return { level.x , level.y };
 }
 
 void Levels::SetWinCondiction(float value) {
@@ -49,4 +49,9 @@ void Levels::AddZombiesTypes(const CellContent value) {
 
 const std::vector<CellContent> Levels::GetZombiesTypes() const {
 	return zombiesTypes;
+}
+
+void Levels::ClearTypes() {
+	plantsTypes.clear();
+	zombiesTypes.clear();
 }

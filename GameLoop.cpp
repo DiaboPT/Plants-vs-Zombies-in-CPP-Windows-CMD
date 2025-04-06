@@ -5,7 +5,7 @@
 #define PLANTRESET COLOR(208)
 #define GAMERESET  COLOR(46)
 
-const int res = 86;
+const int res = 108;
 const int width = 16, height = 9, distance = 5;
 Coords size { width , height , distance };
 
@@ -71,12 +71,16 @@ void GameLoop() {
 			PoleVault
 		};
 
-		int i = level.GetLevel().x - 1;
+		int i = level.GetLevel().x;
 		float j = 5.0f;
 		float k = 1.5f + (level.GetLevel().x * .5f);
 
-		level.AddPlantsTypes(plantsTypes[i]);
-		level.AddZombiesTypes(zombiesTypes[i]);
+		level.ClearTypes();
+
+		for (int i = 0; i <= level.GetLevel().x; ++i) {
+			level.AddPlantsTypes(plantsTypes[i]);
+			level.AddZombiesTypes(zombiesTypes[i]);
+		}
 
 		level.SetWinCondiction(pow(j, k));
 
@@ -85,7 +89,7 @@ void GameLoop() {
 		zombiesBoardWidth = (int)level.GetZombiesTypes().size() + 2;
 		plantsBoardHeight = 2, zombiesBoardHeight = 2, gameBoardWidth = 9;
 
-		switch (level.GetLevel().x - 1) {
+		switch (level.GetLevel().x) {
 			case 0: gameBoardHeight = 1; break;
 			case 1: gameBoardHeight = 3; break;
 			case 3: gameBoardHeight = 5; break;
@@ -93,21 +97,21 @@ void GameLoop() {
 
 		// Create the boards
 		plantsBoard = GameBoard(plantsBoardWidth, plantsBoardHeight);
-		plantsBoardSelection = { 2,0 };
+		plantsBoardSelection = { 2 , 0 };
 		zombiesBoard = GameBoard(zombiesBoardWidth, zombiesBoardHeight);
-		zombiesBoardSelection = { 2,0 };
+		zombiesBoardSelection = { 2 , 0 };
 
 		gameBoard = GameBoard(gameBoardWidth, gameBoardHeight);
-		gameBoardSelection = { 0,0 };
+		gameBoardSelection = { 0 , 0 };
 
 		// Populate the plantsBoard
 		for (int y = 0; y < plantsBoardHeight; y++) {
 			for (int x = 0; x < plantsBoardWidth; x++) {
 				if (x == 0) {
-					plantsBoard.SetCell({ x, y }, y == 0 ? plantsCurrency : CellContent());
+					plantsBoard.SetCell({ x , y }, y == 0 ? plantsCurrency : CellContent());
 				}
 				else if (x == 1) {
-					plantsBoard.SetCell({ x, y }, CellContent()); // Empty cell
+					plantsBoard.SetCell({ x , y }, CellContent()); // Empty cell
 				}
 				else {
 					int index = x - 2;
@@ -363,7 +367,7 @@ void GameLoop() {
 			zombiesBoard.SetCell({ 0, 1 }, CellContent(std::to_string(zombiesCurrency.Get_Cost()), zombiesCurrency.Get_Cost(), 0));
 
 			output = RESET;
-			output += "World " + std::to_string(level.GetLevel().y) + "-" + std::to_string(level.GetLevel().x);
+			output += "World " + std::to_string(level.GetLevel().y + 1) + "-" + std::to_string(level.GetLevel().x + 1);
 			output += RESET;
 
 			output += RESET;
@@ -399,7 +403,7 @@ void GameLoop() {
 				level.AddLevel();
 
 				if (true) {
-					int i = level.GetLevel().x - 1;
+					int i = level.GetLevel().x;
 					float j = 5.0f;
 					float k = 1.5f + (level.GetLevel().x * .5f);
 

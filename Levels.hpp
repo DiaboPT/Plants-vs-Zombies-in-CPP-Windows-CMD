@@ -37,4 +37,7 @@ public:
 	void AddZombiesTypes(const CellContent value);
 
 	const std::vector<CellContent> GetZombiesTypes() const;
+
+	void ClearTypes();
+
 };
