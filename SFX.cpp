@@ -85,6 +85,14 @@ void GrasswalkSong() {
         }).detach();
 }
 
+void PlayCollectSunSound() {
+    std::thread([] {
+        // Quick rising pop
+        playNote(A4, 50);
+        playNote(C5, 70);
+        }).detach();
+}
+
 void PlayZombieBiteSound() {
     std::thread([] {
         playNote(C4, 100); // Low-frequency bite
@@ -97,5 +105,13 @@ void PlayZombieHitSound() {
     std::thread([] {
         playNote(C5, 50);  // Quick high-pitch "impact"
         playNote(D4, 70);  // Slightly lower "reverberation"
+        }).detach();
+}
+
+void PlayCherryBombExplodeSound() {
+    std::thread([] {
+        // Snap-pow core of explosion
+        playNote(C5, 30);
+        playNote(A4, 40);
         }).detach();
 }

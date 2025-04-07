@@ -37,6 +37,10 @@ void playNote(int frequency, int duration);
 
 void GrasswalkSong();
 
+void PlayCollectSunSound();
+
 void PlayZombieBiteSound();
 
 void PlayZombieHitSound();
+
+void PlayCherryBombExplodeSound();
