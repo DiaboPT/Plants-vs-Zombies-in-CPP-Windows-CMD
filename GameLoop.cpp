@@ -1,7 +1,7 @@
 ﻿// GameLoop.cpp
 
 #include "GameLoop.hpp"
-#include "cppFrameWork/FrameWork.hpp"
+#include "FrameWork/FrameWork.hpp"
 
 #define PLANTRESET COLOR(208)
 #define GAMERESET  COLOR(46)
@@ -52,10 +52,10 @@ void GameLoop() {
 		// Define plant and zombie objects manually
 		Peashooter = CellContent(COLOR(46) + std::string("P"), 4, 6, 1.5f);
 		Sunflower = CellContent(COLOR(220) + std::string("S"), 2, 6, 24.0f / 2);
-		CherryBomb = CellContent(COLOR(1) + std::string("C"), 0, 6, 1.2f);
+		CherryBomb = CellContent(COLOR(1) + std::string("C"), 6, 6, 1.2f);
 		WallNut = CellContent(COLOR(208) + std::string("W"), 2, 72);
 		plantsTypes = {
-			CherryBomb,
+			Peashooter,
 			Sunflower,
 			CherryBomb,
 			WallNut

@@ -3,7 +3,7 @@
 #include <vector>
 
 #include "CellContent.hpp"
-#include "cppFrameWork/FrameWork.hpp"
+#include "FrameWork/FrameWork.hpp"
 
 // GameBoard class
 class GameBoard {

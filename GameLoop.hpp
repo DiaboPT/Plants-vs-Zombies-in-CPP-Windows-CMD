@@ -4,7 +4,7 @@
 
 #include <vector>
 
-#include "cppFrameWork/FrameWork.hpp"
+#include "FrameWork/FrameWork.hpp"
 #include "Levels.hpp"
 #include "CellContent.hpp"
 #include "GameBoard.hpp"
