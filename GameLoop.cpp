@@ -1,6 +1,7 @@
 ﻿// GameLoop.cpp
 
 #include "GameLoop.hpp"
+#include "cppFrameWork/FrameWork.hpp"
 
 #define PLANTRESET COLOR(208)
 #define GAMERESET  COLOR(46)
@@ -11,10 +12,6 @@ Coords size { width , height , distance };
 
 // GameLoop function with Linux compatibility
 void GameLoop() {
-
-	// Console and console font size
-	SetConsoleFontSize(res * .25);
-	SetConsoleSize(res, size);
 
 	// Game Start & Update Requirements
 	bool gameloop = false;
@@ -43,6 +40,10 @@ void GameLoop() {
 	Coords plantsBoardSelection{}, zombiesBoardSelection{}, gameBoardSelection{};
 
 	std::function<void()> ReStart = [&]() {
+
+		// Console and console font size
+		SetConsoleFontSize(height * res * .1);
+		SetConsoleSize(res, size);
 
 		plantsCurrency = CellContent(COLOR(220) + std::string("C"), 1, 0, 10 / 2);
 		zombiesCurrency = CellContent(plantsCurrency);
@@ -257,7 +258,7 @@ void GameLoop() {
 												gameBoard.SetCell({ i, j }, damagedZombie);
 											}
 											else {
-												gameBoard.SetCell({ i, y }, Nothing);
+												gameBoard.SetCell({ i, j }, Nothing);
 												zombiesCurrency.Add_Cost(damagedZombie.Get_Cost() / 2);
 											}
 											PlayZombieHitSound();
@@ -424,9 +425,8 @@ void GameLoop() {
 					break;
 				}
 
-				ReStart();
+				SetConsoleFontSize(height * res);
 
-				output = "";
 				ClearScreen();
 				std::cout << RESET;
 				std::cout << "+----------+\n";
@@ -435,6 +435,9 @@ void GameLoop() {
 				std::cout << RESET;
 				rest(3000);
 				ClearScreen();
+
+				output = "";
+				ReStart();
 			}
 			frameCount++;
 
