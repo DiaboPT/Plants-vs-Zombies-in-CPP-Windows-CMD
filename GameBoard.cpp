@@ -40,5 +40,15 @@ const std::string GameBoard::DrawBoard(Coords selected, std::string selectedColo
 	return returned;
 }
 
-void GameBoard::SetCell(Coords coords, CellContent value) { cell[coords.x][coords.y] = value; }
-const CellContent GameBoard::GetCell(Coords coords) const { return cell[coords.x][coords.y]; }
+void GameBoard::SetCell(Coords coords, CellContent value) {
+	cell
+		[(coords.x < 0) ? 0 : (coords.x > grid.x -1) ? grid.x -1 : coords.x]
+		[(coords.y < 0) ? 0 : (coords.y > grid.y -1) ? grid.y -1 : coords.y]
+		= value;
+}
+
+CellContent GameBoard::GetCell(Coords coords) {
+	return cell
+		[(coords.x < 0) ? 0 : (coords.x > grid.x -1) ? grid.x -1 : coords.x]
+		[(coords.y < 0) ? 0 : (coords.y > grid.y -1) ? grid.y -1 : coords.y];
+}

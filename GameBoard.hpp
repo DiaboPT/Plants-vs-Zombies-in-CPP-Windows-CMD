@@ -18,5 +18,5 @@ public:
 	const std::string DrawBoard(Coords selected, std::string selectedColor, std::string resetColor);
 
 	void SetCell(Coords coords, CellContent value);
-	const CellContent GetCell(Coords coords) const;
+	CellContent GetCell(Coords coords);
 };
