@@ -49,7 +49,7 @@ void GameLoop() {
 	std::function<void()> ReStart = [&]() {
 
 		// Console and console font size
-		SetConsoleFontSize(res * .1f);
+		SetConsoleFontSize(res * .25f);
 		SetConsoleSize(res, size);
 
 		frameCount = 0;

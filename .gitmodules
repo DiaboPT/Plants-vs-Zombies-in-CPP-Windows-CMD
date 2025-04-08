@@ -1,3 +1,3 @@
-[submodule "FrameWork"]
-	path = FrameWork
-	url = https://github.com/DiaboPT/cppFrameWork
+[submodule "cppFrameWork"]
+	path = cppFrameWork
+	url = https://github.com/DiaboPT/cppFrameWork.git
