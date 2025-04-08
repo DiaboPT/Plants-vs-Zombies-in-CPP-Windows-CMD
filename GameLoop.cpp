@@ -172,7 +172,6 @@ void GameLoop() {
 		};
 
 	// Start
-	level.SetLevel({ 4 , 0 });
 	Start(gameloop, ReStart);
 
 	ClearScreen();
