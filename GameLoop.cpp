@@ -302,44 +302,6 @@ void GameLoop() {
 						}
 					}
 
-					// Rolling Nut
-					bool hasRollingWallNut = gameBoard.GetCell({ x, y }).Get_Name() == RollingWallNut.Get_Name();
-					if (hasRollingWallNut) {
-
-						if (x == size.x - 1) {
-							gameBoard.SetCell({ x, y }, Nothing);
-						}
-						else {
-							bool hasZombieNext = false;
-							for (int i = 0; i < level.GetZombiesTypes().size(); i++) {
-								if (gameBoard.GetCell({ x - 1, y }).Get_Name() == level.GetZombiesTypes()[i].Get_Name()) {
-									hasZombieNext = true;
-									break;
-								}
-							}
-
-							if (fmod(frameCount, fps * gameBoard.GetCell({ x,y }).Get_Speed()) < 1) {
-								if (hasZombieNext) {
-
-									CellContent damagedZombie = gameBoard.GetCell({ x - 1, y });
-									damagedZombie.Add_HP(Basic.Get_HP());
-									if (damagedZombie.Get_HP() != 0) {
-										gameBoard.SetCell({ x - 1, y }, damagedZombie);
-									}
-									else {
-										gameBoard.SetCell({ x - 1, y }, Nothing);
-									}
-									PlayZombieHitSound();
-								}
-								else {
-									// Moves a cell foward
-									gameBoard.SetCell({ x + 1 , y }, gameBoard.GetCell({ x , y }));
-									gameBoard.SetCell({ x, y }, Nothing);
-								}
-							}
-						}
-					}
-
 					// Zombies movement + damages next Plant
 					bool hasZombie = false;
 					for (int i = 0; i < level.GetZombiesTypes().size(); i++) {
@@ -428,6 +390,51 @@ void GameLoop() {
 								int randomLine = Random::FromList(possibleLines);
 								gameBoard.SetCell({ gameBoardWidth - 1, randomLine }, zombie);
 								zombiesCurrency.Add_Cost(-zombie.Get_Cost());
+							}
+						}
+					}
+				}
+
+				for (int x = gameBoardWidth -1; x >= 0; x--) {
+
+					// Rolling Nut
+					bool hasRollingWallNut = gameBoard.GetCell({ x, y }).Get_Name() == RollingWallNut.Get_Name();
+					if (hasRollingWallNut) {
+
+						if (x == size.x - 1) {
+							gameBoard.SetCell({ x, y }, Nothing);
+						}
+						else {
+							bool hasZombieNext = false;
+							for (int i = 0; i < level.GetZombiesTypes().size(); i++) {
+								if (gameBoard.GetCell({ x - 1, y }).Get_Name() == level.GetZombiesTypes()[i].Get_Name()) {
+									hasZombieNext = true;
+									break;
+								}
+							}
+
+							if (fmod(frameCount, fps * gameBoard.GetCell({ x,y }).Get_Speed()) < 1) {
+								if (hasZombieNext) {
+
+									CellContent damagedZombie = gameBoard.GetCell({ x - 1, y });
+									damagedZombie.Add_HP(Basic.Get_HP());
+									if (damagedZombie.Get_HP() != 0) {
+										gameBoard.SetCell({ x - 1, y }, damagedZombie);
+									}
+									else {
+										gameBoard.SetCell({ x - 1, y }, Nothing);
+									}
+
+									gameBoard.SetCell({ x + 1 , y + 1 }, gameBoard.GetCell({ x, y }));
+									gameBoard.SetCell({ x, y }, Nothing);
+
+									PlayZombieHitSound();
+								}
+								else {
+									// Moves a cell foward
+									gameBoard.SetCell({ x + 1 , y }, gameBoard.GetCell({ x , y }));
+									gameBoard.SetCell({ x, y }, Nothing);
+								}
 							}
 						}
 					}
