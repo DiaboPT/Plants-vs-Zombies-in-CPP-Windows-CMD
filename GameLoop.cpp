@@ -42,7 +42,7 @@ void GameLoop() {
 	std::function<void()> ReStart = [&]() {
 
 		// Console and console font size
-		SetConsoleFontSize(height * res * .1);
+		SetConsoleFontSize(height * res * .1f);
 		SetConsoleSize(res, size);
 
 		plantsCurrency = CellContent(COLOR(220) + std::string("C"), 1, 0, 10 / 2);
