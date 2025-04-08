@@ -1,5 +1,5 @@
 // main.cpp
-#include "header.hpp"
+#include "GameLoop.hpp"
 
 int main() {
     GameLoop();
