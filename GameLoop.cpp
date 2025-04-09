@@ -8,7 +8,75 @@
 
 const int res = 108;
 const int width = 16, height = 9, distance = 5;
-Coords size { width , height , distance };
+Coords size{ width , height , distance };
+
+std::vector<CellContent> ChooseSeeds(std::vector<CellContent> Seeds, GameBoard plantsBoard, Coords plantsBoardSelection) {
+	std::vector<CellContent> vectorCellContent;
+
+	Coords seedsTableSelection{}, seedsTableSize{ 8 , 6 };
+	GameBoard seedsTable = GameBoard(seedsTableSize.x, seedsTableSize.y);
+
+	for (int y = 0; y < seedsTableSize.y; y++) {
+		for (int x = 0; x < seedsTableSize.x; x++) {
+			for (int i = 0; i < Seeds.size(); i++) {
+				seedsTable.SetCell({ x , y }, Seeds[i]);
+			}
+		}
+	}
+
+	bool gameloop = true;
+	std::string output = "";
+	float fps = 60;
+
+	Update(gameloop, output, fps, [&] {
+
+		// Detects if key is press
+		if (isKeyPressed()) {
+			char key = getKeyPressed();
+
+			switch (key) {
+			case 'q': case 'Q': if (plantsBoardSelection.x > 0) plantsBoardSelection.x--; break;
+			case 'e': case 'E': if (plantsBoardSelection.x < (plantsBoard.GetGrid().x) - 1) plantsBoardSelection.x++; break;
+
+			case 'w': case 'W': if (seedsTableSelection.y > 0) seedsTableSelection.y--; break;
+			case 'a': case 'A': if (seedsTableSelection.x > 0) seedsTableSelection.x--; break;
+			case 's': case 'S': if (seedsTableSelection.y < seedsTableSize.y - 1) seedsTableSelection.y++; break;
+			case 'd': case 'D': if (seedsTableSelection.x < seedsTableSize.x - 1) seedsTableSelection.x++; break;
+
+			case ' ': plantsBoard.SetCell(seedsTableSelection, plantsBoard.GetCell(plantsBoardSelection));
+				break;
+			case 27:
+				gameloop = false;
+				break;
+			}
+		}
+
+		output += RESET;
+		output += "\nPlants Board:\n" + plantsBoard.DrawBoard(plantsBoardSelection, COLOR(46), PLANTRESET);
+		output += RESET;
+
+		output += "\nSeeds Board:\n" + seedsTable.DrawBoard(seedsTableSelection, COLOR(220), GAMERESET);
+		output += RESET;
+
+		output += "Selected: ";
+		output += "Name: ";
+		output += std::string(seedsTable.GetCell(seedsTableSelection).Get_Name());
+		output += RESET;
+		output += " | HP: ";
+		output +=
+			seedsTable.GetCell(seedsTableSelection).Get_HP() > 9 ?
+			std::to_string(seedsTable.GetCell(seedsTableSelection).Get_HP()) + " " :
+			"0" + std::to_string(seedsTable.GetCell(seedsTableSelection).Get_HP());
+		output += "\n";
+
+		});
+
+	for (int i = 0; i < vectorCellContent.size(); i++) {
+		vectorCellContent[i] = plantsBoard.GetCell({ i });
+	}
+
+	return vectorCellContent;
+}
 
 // GameLoop function with Linux compatibility
 void GameLoop() {
@@ -27,19 +95,90 @@ void GameLoop() {
 	int zombieTimeCount = 0;
 
 	// Plants Cells
+	// Info : https://plantsvszombies.fandom.com/wiki/Plants_(PvZ)
 	const CellContent
-		Peashooter = CellContent(COLOR(46) + std::string("P"), 4, 6, 1.5f), 
-		Sunflower = CellContent(COLOR(220) + std::string("S"), 2, 6, 24.0f / 2), 
+		Peashooter = CellContent(COLOR(46) + std::string("P"), 4, 6, 1.5f),
+		Sunflower = CellContent(COLOR(220) + std::string("S"), 2, 6, 24.0f / 2),
 		CherryBomb = CellContent(COLOR(1) + std::string("C"), 6, 6, 1.2f),
 		WallNut = CellContent(COLOR(208) + std::string("W"), 2, 72),
-		RollingWallNut = CellContent(COLOR(208) + std::string("R"), 0, WallNut.Get_HP(), Peashooter.Get_Speed());
+		RollingWallNut = CellContent(COLOR(208) + std::string("R"), 0, WallNut.Get_HP(), Peashooter.Get_Speed()),
+		PotatoMine,
+		SnowPea,
+		Chomper,
+		Repeater = CellContent(COLOR(46) + std::string("R"), Peashooter.Get_Cost() * 2, 6, Peashooter.Get_Speed() * .5f),
+		PuffShroom,
+		SunShroom,
+		FumeShroom,
+		GraveBuster,
+		HypnoShroom,
+		ScaredyShroom,
+		IceShroom,
+		DoomShroom,
+		LilyPad,
+		Squash,
+		Threepeater,
+		TangleKelp,
+		Jalapeno,
+		SpikeWeed,
+		TorchWood,
+		TallNut = CellContent(COLOR(208) + std::string("T"), WallNut.Get_Cost() * 2.25f, WallNut.Get_HP() * 2.25f),
+		SeaShroom,
+		Plantern,
+		Cactus,
+		Blover,
+		SplitPea,
+		StarFruit,
+		Pumpkin,
+		MagnetShroom,
+		CabbagePult,
+		FlowerPot,
+		KernelPult,
+		CoffeBean,
+		Garlic,
+		UmbrellaLeaf,
+		Marigold = CellContent(COLOR(0) + std::string("M"), Sunflower.Get_Cost(), Sunflower.Get_HP(), Sunflower.Get_Speed()),
+		MelonPult,
+		GatlingPea = CellContent(COLOR(46) + std::string("G"), Repeater.Get_Cost() * 2, 6, Repeater.Get_Speed() * .5f),
+		TwinSunFlower = CellContent(COLOR(220) + std::string("2"), Sunflower.Get_Cost() * 3, 6, Sunflower.Get_Speed() * .5f),
+		GloomShroom,
+		CatTail,
+		WinterPult,
+		GoldMagnet,
+		SpikeRock,
+		CobCannon,
+		Imitator
+		;
 
 	// Zombies Cells
+	// Info: https://plantsvszombies.fandom.com/wiki/Zombies_(PvZ)
 	const CellContent
 		Basic = CellContent(COLOR(165) + std::string("Z"), 5, 10, 4.7f),
+		FlagBasic = CellContent(COLOR(1) + std::string("F"), 0, Basic.Get_HP() * 1.25f, Basic.Get_Speed() * 1.25f),
 		ConeHead = CellContent(COLOR(208) + std::string("C"), Basic.Get_Cost() * 2, Basic.Get_HP() * 2, Basic.Get_Speed()),
 		PoleVault = CellContent(COLOR(74) + std::string("P"), Basic.Get_Cost() * 4, Basic.Get_HP() * 2, Basic.Get_Speed() / 2),
-		BucketHead = CellContent("\033[97m" + std::string("B"), Basic.Get_Cost() * 3, Basic.Get_HP() * 3, Basic.Get_Speed());
+		BucketHead = CellContent("\033[97m" + std::string("B"), Basic.Get_Cost() * 3, Basic.Get_HP() * 3, Basic.Get_Speed()),
+		NewsPaper,
+		ScreenDoor,
+		FootBall,
+		Dancing,
+		BackUp,
+		DuckyTube,
+		Snorkel,
+		Zomboni,
+		Bobsled,
+		DolphinRider,
+		JackInTheBox,
+		Balloon,
+		Digger,
+		Pogo,
+		Yeti,
+		Bungee,
+		Ladder,
+		Catapult,
+		Gargantuar,
+		Imp,
+		DrZomboss
+		;
 
 	// Boards Size
 	int plantsBoardWidth = 0, plantsBoardHeight = 0, zombiesBoardWidth = 0, zombiesBoardHeight = 0, gameBoardWidth = 0, gameBoardHeight = 0;
@@ -49,7 +188,7 @@ void GameLoop() {
 	std::function<void()> ReStart = [&]() {
 
 		// Console and console font size
-		SetConsoleFontSize(res * .25f);
+		SetConsoleFontSize(res * .1f);
 		SetConsoleSize(res, size);
 
 		frameCount = 0;
@@ -66,56 +205,56 @@ void GameLoop() {
 		level.ClearTypes();
 
 		switch (level.GetLevel().x) {
-			case 0:
-				level.SetPlantsTypes({ Peashooter });
-				level.SetZombiesTypes({ Basic });
+		case 0:
+			level.SetPlantsTypes({ Peashooter });
+			level.SetZombiesTypes({ Basic });
 
-				gameBoardHeight = 1;
-				break;
-			case 1:
-				level.SetPlantsTypes({ Peashooter, Sunflower });
-				level.SetZombiesTypes({ Basic });
+			gameBoardHeight = 1;
+			break;
+		case 1:
+			level.SetPlantsTypes({ Peashooter, Sunflower });
+			level.SetZombiesTypes({ Basic, FlagBasic });
 
-				gameBoardHeight = 3;
-				break;
-			case 2:
-				level.SetPlantsTypes({ Peashooter, Sunflower, CherryBomb });
-				level.SetZombiesTypes({ Basic, ConeHead });
+			gameBoardHeight = 3;
+			break;
+		case 2:
+			level.SetPlantsTypes({ Peashooter, Sunflower, CherryBomb });
+			level.SetZombiesTypes({ Basic, ConeHead });
 
-				gameBoardHeight = 3;
-				break;
-			case 3:
-				level.SetPlantsTypes({ Peashooter, Sunflower, CherryBomb, WallNut });
-				level.SetZombiesTypes({ Basic, ConeHead });
+			gameBoardHeight = 3;
+			break;
+		case 3:
+			level.SetPlantsTypes({ Peashooter, Sunflower, CherryBomb, WallNut });
+			level.SetZombiesTypes({ Basic, ConeHead });
 
-				gameBoardHeight = 5;
-				break;
-			case 4:
-				level.SetPlantsTypes({ RollingWallNut });
-				level.SetZombiesTypes({ Basic, ConeHead });
+			gameBoardHeight = 5;
+			break;
+		case 4:
+			level.SetPlantsTypes({ RollingWallNut });
+			level.SetZombiesTypes({ Basic, ConeHead });
 
-				zombieTimeCount = 5;
-				zombiesCurrency.Set_Cost(4);
-				gameBoardHeight = 5;
-				break;
-			case 5:
-				level.SetPlantsTypes({ Peashooter, Sunflower, CherryBomb, WallNut });
-				level.SetZombiesTypes({ Basic, ConeHead, PoleVault });
+			zombieTimeCount = 5;
+			zombiesCurrency.Set_Cost(4);
+			gameBoardHeight = 5;
+			break;
+		case 5:
+			level.SetPlantsTypes({ Peashooter, Sunflower, CherryBomb, WallNut });
+			level.SetZombiesTypes({ Basic, ConeHead, PoleVault });
 
-				gameBoardHeight = 5;
-				break;
-			case 6:
-				level.SetPlantsTypes({ Peashooter, Sunflower, CherryBomb, WallNut });
-				level.SetZombiesTypes({ Basic, ConeHead, PoleVault });
+			gameBoardHeight = 5;
+			break;
+		case 6:
+			level.SetPlantsTypes({ Peashooter, Sunflower, CherryBomb, WallNut });
+			level.SetZombiesTypes({ Basic, ConeHead, PoleVault });
 
-				gameBoardHeight = 5;
-				break;
-			case 7:
-				level.SetPlantsTypes({ Peashooter, Sunflower, CherryBomb, WallNut });
-				level.SetZombiesTypes({ Basic, ConeHead, PoleVault, BucketHead });
+			gameBoardHeight = 5;
+			break;
+		case 7:
+			level.SetPlantsTypes(ChooseSeeds({ Peashooter, Sunflower, CherryBomb, WallNut }, plantsBoard, plantsBoardSelection));
+			level.SetZombiesTypes({ Basic, ConeHead, PoleVault, BucketHead });
 
-				gameBoardHeight = 5;
-				break;
+			gameBoardHeight = 5;
+			break;
 		}
 
 		plantsBoardWidth = (int)level.GetPlantsTypes().size() + 2;
@@ -172,6 +311,7 @@ void GameLoop() {
 		};
 
 	// Start
+	level.SetLevel({ 7 , 0 });
 	Start(gameloop, ReStart);
 
 	ClearScreen();
@@ -395,7 +535,7 @@ void GameLoop() {
 					}
 				}
 
-				for (int x = gameBoardWidth -1; x >= 0; x--) {
+				for (int x = gameBoardWidth - 1; x >= 0; x--) {
 
 					// Rolling Nut
 					bool hasRollingWallNut = gameBoard.GetCell({ x, y }).Get_Name() == RollingWallNut.Get_Name();
@@ -464,9 +604,9 @@ void GameLoop() {
 			output += std::string(gameBoard.GetCell(gameBoardSelection).Get_Name());
 			output += RESET;
 			output += " | HP: ";
-			output += 
-				gameBoard.GetCell(gameBoardSelection).Get_HP() > 9 ? 
-				std::to_string(gameBoard.GetCell(gameBoardSelection).Get_HP()) + " " : 
+			output +=
+				gameBoard.GetCell(gameBoardSelection).Get_HP() > 9 ?
+				std::to_string(gameBoard.GetCell(gameBoardSelection).Get_HP()) + " " :
 				"0" + std::to_string(gameBoard.GetCell(gameBoardSelection).Get_HP());
 			output += "\n";
 
