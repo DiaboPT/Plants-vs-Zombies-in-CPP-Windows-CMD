@@ -21,7 +21,7 @@ const std::string GameBoard::DrawBoard(Coords selected, std::string selectedColo
 	for (int y = 0; y < grid.y; y++) {
 		returned += selected.x == 0 && selected.y == y ? selectedColor + std::string("| ") + resetColor : std::string("| ");
 		for (int x = 0; x < grid.x; x++) {
-			returned += cell[x][y].Get_Name() + resetColor;
+			returned += cell[x][y].GetColor() + cell[x][y].Get_Char() + resetColor;
 			if (x < grid.x - 1) {
 				returned += ((selected.x == x && selected.y == y) || (selected.x == x + 1 && selected.y == y)) ? selectedColor + std::string(" | ") + resetColor : std::string(" | ");
 			}
