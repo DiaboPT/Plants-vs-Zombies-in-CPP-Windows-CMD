@@ -719,7 +719,7 @@ void GameLoop() {
 	std::cout << "\n";
 	std::cout << "+---------------------+\n";
 	std::cout << "| Thanks for playing! |\n";
-	std::cout << "| Time: " << std::to_string(frameCount / fps) << (" seconds!  ") << " |\n";
+	std::cout << "| Level reached: " + std::to_string(level.GetLevel().y + 1) + "-" + std::to_string(level.GetLevel().x + 1) << "  |\n";
 	std::cout << "+---------------------+\n";
 	std::cout << RESET;
 }
