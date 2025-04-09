@@ -25,8 +25,8 @@ void playNote(int frequency, int duration) {
 #ifdef _WIN32
     Beep(frequency, duration);
 #else
-    std::string command = "play -n synth " + std::std::to_string(duration / 1000.0) +
-        " sine " + std::std::to_string(frequency) + " > /dev/null 2>&1";
+    std::string command = "play -n synth " + std::to_string(duration / 1000.0) +
+        " sine " + std::to_string(frequency) + " > /dev/null 2>&1";
     system(command.c_str());
 #endif
     rest(50);
