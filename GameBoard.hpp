@@ -19,4 +19,7 @@ public:
 
 	void SetCell(Coords coords, CellContent value);
 	CellContent GetCell(Coords coords);
+
+	void SetGrid(Coords value);
+	Coords GetGrid();
 };
