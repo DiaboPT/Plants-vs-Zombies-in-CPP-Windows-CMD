@@ -6,9 +6,9 @@
 #define PLANTRESET COLOR(208)
 #define GAMERESET  COLOR(46)
 
-const int res = 108;
-const int width = 16, height = 9, distance = 5;
-Coords size{ width , height , distance };
+const int Res = 108;
+const int Width = 16, Height = 9, Lenght = 5;
+Coords size{ Width , Height , Lenght };
 
 static std::vector<CellContent> ChooseSeeds(std::vector<CellContent> Seeds, Coords plantsBoardSize, Coords plantsBoardSelection) {
 	std::vector<CellContent> vectorCellContent;
@@ -107,7 +107,6 @@ static std::vector<CellContent> ChooseSeeds(std::vector<CellContent> Seeds, Coor
 
 	return vectorCellContent;
 }
-
 
 static bool AreAllZombiesGone(Coords gameBoardSize, Levels level, GameBoard gameBoard) {
 	for (int y = 0; y < gameBoardSize.y; y++) {
@@ -245,8 +244,8 @@ void GameLoop() {
 	std::function<void()> ReStart = [&](){
 
 		// Console and console font size
-		SetConsoleFontSize(res * .1f);
-		SetConsoleSize(res, size);
+		SetConsoleFontSize(Res * .25f);
+		SetConsoleSize(Res, size);
 
 		isLastFlag = false;
 		winConditionReached = false;
@@ -268,7 +267,7 @@ void GameLoop() {
 			plantsBoardSize.x = 6;
 
 			level.SetPlantsTypes({ Peashooter });
-			level.SetZombiesTypes({ Zombie });
+			level.SetZombiesTypes({ Zombie, FlagZombie });
 			break;
 		case 1:
 			gameBoardSize.y = 3;
@@ -419,7 +418,7 @@ void GameLoop() {
 
 			// Currency Update
 			if (fmod(frameCount, fps * plantsCurrency.GetSpeed()) < 1) {
-				PlayCollectSunSound();
+				// PlayCollectSunSound();
 				plantsCurrency.AddCost(1);
 
 				if (!winConditionReached) zombiesCurrency.AddCost(zombieTimeCount);
@@ -432,7 +431,7 @@ void GameLoop() {
 					int sunflowerCount = 0;
 					bool hasSunflowerHere = gameBoard.GetCell({ x, y }).Get_Name() == Sunflower.Get_Name();
 					if (hasSunflowerHere) {
-						PlayCollectSunSound();
+						// PlayCollectSunSound();
 						if (fmod(frameCount, fps * Sunflower.GetSpeed()) < 1) {
 							sunflowerCount++;
 						}
@@ -466,7 +465,7 @@ void GameLoop() {
 										gameBoard.SetCell({ i, y }, Nothing);
 										if (!winConditionReached) zombiesCurrency.AddCost(damagedZombie.GetCost() / 2);
 									}
-									PlayZombieHitSound();
+									// PlayZombieHitSound();
 									break;
 								}
 							}
@@ -478,7 +477,7 @@ void GameLoop() {
 					if (hasCherryBombHere) {
 
 						if (fmod(frameCount, fps * CherryBomb.GetSpeed()) < 1) {
-							PlayCherryBombExplodeSound();
+							// PlayCherryBombExplodeSound();
 
 							for (int j = max(0, y - 1); j <= min(gameBoardSize.y - 1, y + 1); j++) {
 								for (int i = max(0, x - 1); i <= min(gameBoardSize.x - 1, x + 1); i++) {
@@ -495,7 +494,7 @@ void GameLoop() {
 												gameBoard.SetCell({ i, j }, Nothing);
 												if (!winConditionReached) zombiesCurrency.AddCost(damagedZombie.GetCost() / 2);
 											}
-											PlayZombieHitSound();
+											// PlayZombieHitSound();
 										}
 									}
 								}
@@ -547,7 +546,7 @@ void GameLoop() {
 									else {
 										gameBoard.SetCell({ x - 1, y }, Nothing);
 									}
-									PlayZombieBiteSound();
+									// PlayZombieBiteSound();
 								}
 							}
 							else if (!hasPlantNext && !hasZombieNext) {
@@ -632,7 +631,7 @@ void GameLoop() {
 									gameBoard.SetCell({ x + 1 , y + 1 }, gameBoard.GetCell({ x, y }));
 									gameBoard.SetCell({ x, y }, Nothing);
 
-									PlayZombieHitSound();
+									// PlayZombieHitSound();
 								}
 								else {
 									// Moves a cell foward
@@ -650,22 +649,25 @@ void GameLoop() {
 
 			output = RESET;
 			output += "World " + std::to_string(level.GetLevel().y + 1) + "-" + std::to_string(level.GetLevel().x + 1);
+			output += "\n";
 			output += RESET;
 
-			output += RESET;
-			output += "\nObjective: " + std::to_string(int(level.GetWinCondiction())) + " zombies currency\n";
-			output += RESET;
-
-			output += RESET;
-			output += "\nPlants Board:\n" + plantsBoard.DrawBoard(plantsBoardSelection, COLOR(46), PLANTRESET);
+			output += "Objective: Defeat " + FlagZombie.Get_Name() + RESET;
+			output += "\n";
 			output += RESET;
 
-			output += "\nGame Board:\n" + gameBoard.DrawBoard(gameBoardSelection, COLOR(220), GAMERESET);
+			output += "\n";
+			output += "Plants Board:\n" + plantsBoard.DrawBoard(plantsBoardSelection, COLOR(46), PLANTRESET);
+			output += "\n";
+			output += RESET;
+
+			output += "Game Board:\n" + gameBoard.DrawBoard(gameBoardSelection, COLOR(220), GAMERESET);
 			output += RESET;
 
 			output += "Selected: ";
+			output += "\n";
 
-			output += "\n- Name: ";
+			output += "- Name: ";
 			output += std::string(gameBoard.GetCell(gameBoardSelection).GetColor()) + std::string(gameBoard.GetCell(gameBoardSelection).Get_Name());
 			output += RESET + std::string("                                    ");
 			output += "\n";
@@ -678,7 +680,8 @@ void GameLoop() {
 			output += RESET + std::string("                                    ");
 			output += "\n";
 
-			output += "\nZombies Board:\n" + std::string(PLANTRESET) + zombiesBoard.DrawBoard(zombiesBoardSelection, COLOR(165), PLANTRESET) + '\n';
+			output += "\n";
+			output += "Zombies Board:\n" + std::string(PLANTRESET) + zombiesBoard.DrawBoard(zombiesBoardSelection, COLOR(165), PLANTRESET);
 			output += RESET;
 
 			// Last Wave
