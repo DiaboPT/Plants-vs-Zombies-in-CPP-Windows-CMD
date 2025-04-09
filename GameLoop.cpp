@@ -14,7 +14,7 @@ std::vector<CellContent> ChooseSeeds(std::vector<CellContent> Seeds, GameBoard p
 	std::vector<CellContent> vectorCellContent;
 
 	Coords seedsTableSelection{}, seedsTableSize{ 8 , 6 };
-	GameBoard seedsTable = GameBoard(seedsTableSize.x, seedsTableSize.y);
+	GameBoard seedsTable = GameBoard(seedsTableSize);
 
 	for (int y = 0; y < seedsTableSize.y; y++) {
 		for (int x = 0; x < seedsTableSize.x; x++) {
@@ -78,16 +78,28 @@ std::vector<CellContent> ChooseSeeds(std::vector<CellContent> Seeds, GameBoard p
 	return vectorCellContent;
 }
 
+bool AreAllZombiesGone(Coords gameBoardSize, Levels level, GameBoard gameBoard) {
+	for (int y = 0; y < gameBoardSize.y; y++) {
+		for (int x = 0; x < gameBoardSize.x; x++) {
+			for (const auto& z : level.GetZombiesTypes()) {
+				if (gameBoard.GetCell({ x, y }).Get_Name() == z.Get_Name()) {
+					return false;
+				}
+			}
+		}
+	}
+	return true;
+}
+
+
 // GameLoop function with Linux compatibility
 void GameLoop() {
 
-	// Game Start & Update Requirements
-	bool gameloop = false;
-	const int fps = 60;
-	std::string output = "";
-
 	// Extra Inicializations for especific game
 	Levels level = Levels();
+	bool isLastFlag = false;
+	bool winConditionReached = false;
+	bool flagZombieSpawned = false;
 	int frameCount = 0;
 
 	// Importante Cells
@@ -181,7 +193,7 @@ void GameLoop() {
 		;
 
 	// Boards Size
-	int plantsBoardWidth = 0, plantsBoardHeight = 0, zombiesBoardWidth = 0, zombiesBoardHeight = 0, gameBoardWidth = 0, gameBoardHeight = 0;
+	Coords plantsBoardSize{}, zombiesBoardSize{}, gameBoardSize{};
 	GameBoard plantsBoard, zombiesBoard, gameBoard;
 	Coords plantsBoardSelection{}, zombiesBoardSelection{}, gameBoardSelection{};
 
@@ -191,16 +203,15 @@ void GameLoop() {
 		SetConsoleFontSize(res * .1f);
 		SetConsoleSize(res, size);
 
-		frameCount = 0;
-		plantsCurrency = CellContent(COLOR(220) + std::string("C"), 1, 0, 10 / 2);
+		isLastFlag = false;
+		winConditionReached = false;
+		flagZombieSpawned = false;
+		frameCount = 1;
+
+		plantsCurrency = CellContent(COLOR(220) + std::string("C"), 2, 0, 10 / 2);
 		zombiesCurrency = CellContent(plantsCurrency);
 		zombieTimeCount = 1;
-		gameBoardHeight = 1;
-
-		float j = 5.0f;
-		float k = 1.5f + (level.GetLevel().x * .5f);
-
-		level.SetWinCondiction(pow(j, k));
+		gameBoardSize.y = 1;
 
 		level.ClearTypes();
 
@@ -209,70 +220,78 @@ void GameLoop() {
 			level.SetPlantsTypes({ Peashooter });
 			level.SetZombiesTypes({ Basic });
 
-			gameBoardHeight = 1;
+			gameBoardSize.y = 1;
+			plantsBoardSize.x = 6;
 			break;
 		case 1:
 			level.SetPlantsTypes({ Peashooter, Sunflower });
 			level.SetZombiesTypes({ Basic, FlagBasic });
 
-			gameBoardHeight = 3;
+			gameBoardSize.y = 3;
+			plantsBoardSize.x = 6;
 			break;
 		case 2:
 			level.SetPlantsTypes({ Peashooter, Sunflower, CherryBomb });
-			level.SetZombiesTypes({ Basic, ConeHead });
+			level.SetZombiesTypes({ Basic, FlagBasic, ConeHead });
 
-			gameBoardHeight = 3;
+			gameBoardSize.y = 3;
+			plantsBoardSize.x = 6;
 			break;
 		case 3:
 			level.SetPlantsTypes({ Peashooter, Sunflower, CherryBomb, WallNut });
-			level.SetZombiesTypes({ Basic, ConeHead });
+			level.SetZombiesTypes({ Basic, FlagBasic, ConeHead });
 
-			gameBoardHeight = 5;
+			gameBoardSize.y = 5;
+			plantsBoardSize.x = 6;
 			break;
 		case 4:
 			level.SetPlantsTypes({ RollingWallNut });
-			level.SetZombiesTypes({ Basic, ConeHead });
+			level.SetZombiesTypes({ Basic, FlagBasic, ConeHead });
 
 			zombieTimeCount = 5;
 			zombiesCurrency.Set_Cost(4);
-			gameBoardHeight = 5;
+			gameBoardSize.y = 5;
+			plantsBoardSize.x = 6;
 			break;
 		case 5:
 			level.SetPlantsTypes({ Peashooter, Sunflower, CherryBomb, WallNut });
-			level.SetZombiesTypes({ Basic, ConeHead, PoleVault });
+			level.SetZombiesTypes({ Basic, FlagBasic, ConeHead, PoleVault });
 
-			gameBoardHeight = 5;
+			gameBoardSize.y = 5;
+			plantsBoardSize.x = 6;
 			break;
 		case 6:
 			level.SetPlantsTypes({ Peashooter, Sunflower, CherryBomb, WallNut });
-			level.SetZombiesTypes({ Basic, ConeHead, PoleVault });
+			level.SetZombiesTypes({ Basic, FlagBasic, ConeHead, PoleVault });
 
-			gameBoardHeight = 5;
+			gameBoardSize.y = 5;
+			plantsBoardSize.x = 6;
 			break;
 		case 7:
 			level.SetPlantsTypes(ChooseSeeds({ Peashooter, Sunflower, CherryBomb, WallNut }, plantsBoard, plantsBoardSelection));
-			level.SetZombiesTypes({ Basic, ConeHead, PoleVault, BucketHead });
+			level.SetZombiesTypes({ Basic, FlagBasic, ConeHead, PoleVault, BucketHead });
 
-			gameBoardHeight = 5;
+			gameBoardSize.y = 5;
+			plantsBoardSize.x = 6;
 			break;
 		}
 
-		plantsBoardWidth = (int)level.GetPlantsTypes().size() + 2;
-		zombiesBoardWidth = (int)level.GetZombiesTypes().size() + 2;
+		plantsBoardSize.x += 2; // Goes up to 10 + 2
+		zombiesBoardSize.x = 12 + 2;
 
 		// Create the boards
-		plantsBoardHeight = 2, zombiesBoardHeight = 2, gameBoardWidth = 9;
-		plantsBoard = GameBoard(plantsBoardWidth, plantsBoardHeight);
+		plantsBoardSize.y = 2, zombiesBoardSize.y = 2, gameBoardSize.x = 9;
+		plantsBoard = GameBoard(plantsBoardSize);
 		plantsBoardSelection = { 2 , 0 };
-		zombiesBoard = GameBoard(zombiesBoardWidth, zombiesBoardHeight);
+		zombiesBoard = GameBoard(zombiesBoardSize);
 		zombiesBoardSelection = { 2 , 0 };
 
-		gameBoard = GameBoard(gameBoardWidth, gameBoardHeight);
+		gameBoard = GameBoard(gameBoardSize);
 		gameBoardSelection = { 0 , 0 };
 
 		// Populate the plantsBoard
-		for (int y = 0; y < plantsBoardHeight; y++) {
-			for (int x = 0; x < plantsBoardWidth; x++) {
+		for (int y = 0; y < plantsBoardSize.y; y++) {
+			for (int x = 0; x < plantsBoardSize.x; x++) {
 				if (x == 0) {
 					plantsBoard.SetCell({ x , y }, y == 0 ? plantsCurrency : CellContent());
 				}
@@ -289,9 +308,11 @@ void GameLoop() {
 			}
 		}
 
+		float averageCost = 0;
 		// Populate the zombiesBoard
-		for (int y = 0; y < zombiesBoardHeight; y++) {
-			for (int x = 0; x < zombiesBoardWidth; x++) {
+		for (int y = 0; y < zombiesBoardSize.y; y++) {
+			for (int x = 0; x < zombiesBoardSize.x; x++) {
+
 				if (x == 0) {
 					zombiesBoard.SetCell({ x, y }, y == 0 ? zombiesCurrency : CellContent());
 				}
@@ -303,20 +324,25 @@ void GameLoop() {
 					if (index < level.GetZombiesTypes().size()) {
 						zombiesBoard.SetCell({ x, y }, y == 0 ? level.GetZombiesTypes()[index] :
 							CellContent(std::to_string(level.GetZombiesTypes()[index].Get_Cost()), level.GetZombiesTypes()[index].Get_Cost(), 0));
+						averageCost += zombiesBoard.GetCell({ x , y }).Get_Cost();
 					}
 				}
 			}
 		}
 
+		level.SetWinCondiction(averageCost * 2);
+
+		ClearScreen();
+
 		};
 
 	// Start
-	level.SetLevel({ 7 , 0 });
+	bool gameloop = false;
 	Start(gameloop, ReStart);
 
-	ClearScreen();
-
 	// Update
+	const int fps = 60;
+	std::string output = "";
 	Update(gameloop, output, fps,
 		[&] {
 
@@ -339,8 +365,8 @@ void GameLoop() {
 
 				case 'w': case 'W': if (gameBoardSelection.y > 0) gameBoardSelection.y--; break;
 				case 'a': case 'A': if (gameBoardSelection.x > 0) gameBoardSelection.x--; break;
-				case 's': case 'S': if (gameBoardSelection.y < gameBoardHeight - 1) gameBoardSelection.y++; break;
-				case 'd': case 'D': if (gameBoardSelection.x < gameBoardWidth - 1) gameBoardSelection.x++; break;
+				case 's': case 'S': if (gameBoardSelection.y < gameBoardSize.y - 1) gameBoardSelection.y++; break;
+				case 'd': case 'D': if (gameBoardSelection.x < gameBoardSize.x - 1) gameBoardSelection.x++; break;
 
 				case 'r': case 'R': ReStart();
 
@@ -360,11 +386,12 @@ void GameLoop() {
 			if (fmod(frameCount, fps * plantsCurrency.Get_Speed()) < 1) {
 				PlayCollectSunSound();
 				plantsCurrency.Add_Cost(1);
-				zombiesCurrency.Add_Cost(zombieTimeCount);
+
+				if (!winConditionReached) zombiesCurrency.Add_Cost(zombieTimeCount);
 			}
 
-			for (int y = 0; y < gameBoardHeight; y++) {
-				for (int x = 0; x < gameBoardWidth; x++) {
+			for (int y = 0; y < gameBoardSize.y; y++) {
+				for (int x = 0; x < gameBoardSize.x; x++) {
 
 					// Sunflowers Currency Update
 					int sunflowerCount = 0;
@@ -383,7 +410,7 @@ void GameLoop() {
 
 						if (fmod(frameCount, fps * Peashooter.Get_Speed()) < 1) {
 
-							for (int i = x + 1; i < gameBoardWidth; i++) {
+							for (int i = x + 1; i < gameBoardSize.x; i++) {
 
 								bool hasZombieNext = false;
 								for (int j = 0; j < level.GetZombiesTypes().size(); j++) {
@@ -402,7 +429,7 @@ void GameLoop() {
 									}
 									else {
 										gameBoard.SetCell({ i, y }, Nothing);
-										zombiesCurrency.Add_Cost(damagedZombie.Get_Cost() / 2);
+										if (!winConditionReached) zombiesCurrency.Add_Cost(damagedZombie.Get_Cost() / 2);
 									}
 									PlayZombieHitSound();
 									break;
@@ -418,8 +445,8 @@ void GameLoop() {
 						if (fmod(frameCount, fps * CherryBomb.Get_Speed()) < 1) {
 							PlayCherryBombExplodeSound();
 
-							for (int j = max(0, y - 1); j <= min(gameBoardHeight - 1, y + 1); j++) {
-								for (int i = max(0, x - 1); i <= min(gameBoardWidth - 1, x + 1); i++) {
+							for (int j = max(0, y - 1); j <= min(gameBoardSize.y - 1, y + 1); j++) {
+								for (int i = max(0, x - 1); i <= min(gameBoardSize.x - 1, x + 1); i++) {
 
 									for (int k = 0; k < level.GetZombiesTypes().size(); k++) {
 										if (gameBoard.GetCell({ i, j }).Get_Name() == level.GetZombiesTypes()[k].Get_Name()) {
@@ -431,7 +458,7 @@ void GameLoop() {
 											}
 											else {
 												gameBoard.SetCell({ i, j }, Nothing);
-												zombiesCurrency.Add_Cost(damagedZombie.Get_Cost() / 2);
+												if (!winConditionReached) zombiesCurrency.Add_Cost(damagedZombie.Get_Cost() / 2);
 											}
 											PlayZombieHitSound();
 										}
@@ -454,7 +481,7 @@ void GameLoop() {
 
 						if (x == 0) {
 							// Finishs the game
-							gameloop = false;
+							ReStart();
 						}
 						else {
 							bool hasPlantNext = false;
@@ -504,38 +531,39 @@ void GameLoop() {
 					if (zombieHasMoney) {
 
 						if ((frameCount % fps) == 0) {
-
 							CellContent zombie;
+
 							for (int i = (int)level.GetZombiesTypes().size() - 1; i >= 0; i--) {
-								if (zombiesCurrency.Get_Cost() >= level.GetZombiesTypes()[i].Get_Cost()) {
+								if (isLastFlag && !flagZombieSpawned && level.GetZombiesTypes()[i].Get_Name() == FlagBasic.Get_Name()) {
+									zombie = level.GetZombiesTypes()[i];
+									flagZombieSpawned = true;
+									break;
+								}
+								else if (zombiesCurrency.Get_Cost() >= level.GetZombiesTypes()[i].Get_Cost() && level.GetZombiesTypes()[i].Get_Name() != FlagBasic.Get_Name()) {
 									zombie = level.GetZombiesTypes()[i];
 									zombieTimeCount++;
 									break;
 								}
 							}
 
-							std::vector<int> possibleLines(0);
-							if (true) {
-								int k = 0;
-								for (int j = 0; j < gameBoardHeight; j++) {
-									if (gameBoard.GetCell({ gameBoardWidth - 1, j }).Get_Name() == Nothing.Get_Name()) {
-										possibleLines.resize(static_cast<std::vector<int, std::allocator<int>>::size_type>(k) + 1);
-										possibleLines[k] = j;
-										k++;
-									}
+							std::vector<int> possibleLines;
+							for (int j = 0; j < gameBoardSize.y; j++) {
+								if (gameBoard.GetCell({ gameBoardSize.x - 1, j }).Get_Name() == Nothing.Get_Name()) {
+									possibleLines.push_back(j);
 								}
 							}
 
-							if (possibleLines.size() > 0) {
+							if (!possibleLines.empty()) {
 								int randomLine = Random::FromList(possibleLines);
-								gameBoard.SetCell({ gameBoardWidth - 1, randomLine }, zombie);
+								gameBoard.SetCell({ gameBoardSize.x - 1, randomLine }, zombie);
 								zombiesCurrency.Add_Cost(-zombie.Get_Cost());
 							}
 						}
+
 					}
 				}
 
-				for (int x = gameBoardWidth - 1; x >= 0; x--) {
+				for (int x = gameBoardSize.x - 1; x >= 0; x--) {
 
 					// Rolling Nut
 					bool hasRollingWallNut = gameBoard.GetCell({ x, y }).Get_Name() == RollingWallNut.Get_Name();
@@ -562,6 +590,7 @@ void GameLoop() {
 										gameBoard.SetCell({ x - 1, y }, damagedZombie);
 									}
 									else {
+										if (!winConditionReached) zombiesCurrency.Set_Cost(gameBoard.GetCell({ x - 1, y }).Get_Cost() * .5f);
 										gameBoard.SetCell({ x - 1, y }, Nothing);
 									}
 
@@ -613,9 +642,16 @@ void GameLoop() {
 			output += "\nZombies Board:\n" + std::string(PLANTRESET) + zombiesBoard.DrawBoard(zombiesBoardSelection, COLOR(165), PLANTRESET) + '\n';
 			output += RESET;
 
-			// Win
-			if (zombiesCurrency.Get_Cost() >= level.GetWinCondiction()) {
+			// Last Wave
+			if (!winConditionReached && zombiesCurrency.Get_Cost() >= level.GetWinCondiction()) {
 
+				winConditionReached = true;
+				isLastFlag = true;
+
+			}
+
+			// Win
+			if (winConditionReached && AreAllZombiesGone(gameBoardSize, level, gameBoard)) {
 				ClearScreen();
 				std::cout << RESET;
 				std::cout << "+----------+\n";
@@ -627,8 +663,10 @@ void GameLoop() {
 
 				level.AddLevel();
 				output = "";
+
 				ReStart();
 			}
+
 			frameCount++;
 
 		});

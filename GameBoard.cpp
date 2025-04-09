@@ -1,8 +1,8 @@
 
 #include "GameBoard.hpp"
 
-GameBoard::GameBoard(int x, int y) : cell(x, std::vector<CellContent>(y)) {
-	grid = { x, y };
+GameBoard::GameBoard(Coords size) : cell(size.x, std::vector<CellContent>(size.y)) {
+	grid = size;
 }
 
 GameBoard::GameBoard() {

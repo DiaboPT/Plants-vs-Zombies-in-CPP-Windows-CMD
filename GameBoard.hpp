@@ -12,7 +12,7 @@ private:
 	std::vector<std::vector<CellContent>> cell;
 
 public:
-	GameBoard(int x, int y);
+	GameBoard(Coords size);
 	GameBoard();
 
 	const std::string DrawBoard(Coords selected, std::string selectedColor, std::string resetColor);
