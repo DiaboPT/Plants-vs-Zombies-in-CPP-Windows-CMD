@@ -15,7 +15,7 @@ CellContent::CellContent(std::string new_color, std::string new_name, int new_co
 }
 
 void CellContent::Set_Name(std::string value) { name = value; }
-const std::string CellContent::Get_Name() const { return name; }
+const std::string CellContent::Get_Name() const { return color + name; }
 const char CellContent::Get_Char() const { return name[0]; }
 
 void CellContent::SetColor(std::string value) { color = value; }
