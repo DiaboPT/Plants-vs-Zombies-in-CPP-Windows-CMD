@@ -109,56 +109,70 @@ void GameLoop() {
 	// Plants Cells
 	// Info : https://plantsvszombies.fandom.com/wiki/Plants_(PvZ)
 	const CellContent
+
+		// Day Levels
 		Peashooter = CellContent(COLOR(46), std::string("Peashooter"), 4, 6, 1.5f),
 		Sunflower = CellContent(COLOR(220), std::string("Sunflower"), 2, 6, 24.0f / 2),
-		CherryBomb = CellContent(COLOR(1), std::string("CherryBomb"), 6, 6, 1.2f),
-		WallNut = CellContent(COLOR(208), std::string("WallNut"), 2, 72),
-		RollingWallNut = CellContent(COLOR(208), std::string("RollingWallNut"), 0, WallNut.GetHP(), Peashooter.GetSpeed()),
-		PotatoMine,
-		SnowPea,
-		Chomper,
+		CherryBomb = CellContent(COLOR(1), std::string("Cherry Bomb"), 6, 6, 1.2f),
+		WallNut = CellContent(COLOR(130), std::string("Wall-Nut"), 2, 72),
+		RollingWallNut = CellContent(COLOR(208), std::string("Rolling Wall-Nut"), 0, WallNut.GetHP(), Peashooter.GetSpeed()),
+		PotatoMine = CellContent(COLOR(130), std::string("Potato Mine"), 1),
+		SnowPea = CellContent(COLOR(74), std::string("Snow Peashooter"), Peashooter.GetCost() * 1.75f, Peashooter.GetHP(), Peashooter.GetSpeed()),
+		Chomper = CellContent(COLOR(93), std::string("Chomper"), 6),
 		Repeater = CellContent(COLOR(46), std::string("Repeater"), Peashooter.GetCost() * 2, 6, Peashooter.GetSpeed() * .5f),
-		PuffShroom,
-		SunShroom,
-		FumeShroom,
-		GraveBuster,
-		HypnoShroom,
-		ScaredyShroom,
-		IceShroom,
-		DoomShroom,
-		LilyPad,
-		Squash,
-		Threepeater,
-		TangleKelp,
-		Jalapeno,
-		SpikeWeed,
-		TorchWood,
-		TallNut = CellContent(COLOR(208), std::string("TallNut"), WallNut.GetCost() * 2.25f, WallNut.GetHP() * 2.25f),
-		SeaShroom,
-		Plantern,
-		Cactus,
-		Blover,
-		SplitPea,
-		StarFruit,
-		Pumpkin,
-		MagnetShroom,
-		CabbagePult,
-		FlowerPot,
-		KernelPult,
-		CoffeBean,
-		Garlic,
-		UmbrellaLeaf,
-		Marigold = CellContent(COLOR(0), std::string("Marigold"), Sunflower.GetCost(), Sunflower.GetHP(), Sunflower.GetSpeed()),
-		MelonPult,
-		GatlingPea = CellContent(COLOR(46), std::string("GatlingPea"), Repeater.GetCost() * 2, 6, Repeater.GetSpeed() * .5f),
-		TwinSunFlower = CellContent(COLOR(220), std::string("TwinSunFlower"), Sunflower.GetCost() * 3, 6, Sunflower.GetSpeed() * .5f),
-		GloomShroom,
-		CatTail,
-		WinterPult,
-		GoldMagnet,
-		SpikeRock,
-		CobCannon,
-		Imitator
+
+		// Night Levels
+		PuffShroom = CellContent(COLOR(93), std::string("Puff-Shroom"), 0),
+		SunShroom = CellContent(COLOR(178), std::string("Sun-Shroom"), 1),
+		FumeShroom = CellContent(PuffShroom.GetColor(), std::string("Fume-Shroom"), 3),
+		GraveBuster = CellContent(COLOR(235), std::string("Grave Buster"), 3),
+		HypnoShroom = CellContent(COLOR(218), std::string("Hypno-Shroom"), 3),
+		ScaredyShroom = CellContent(COLOR(95), std::string("Scaredy-Shroom"), 1),
+		IceShroom = CellContent(SnowPea.GetColor(), std::string("Ice-Shroom"), 3),
+		DoomShroom = CellContent(GraveBuster.GetColor(), std::string("Doom-Shroom"), 5),
+
+		// Pool Levels
+		LilyPad = CellContent(COLOR(37), std::string("Lily Pad"), 1),
+		Squash = CellContent(COLOR(120), std::string("Squash"), 2),
+		Threepeater = CellContent(Peashooter.GetColor(), std::string("Threepeater"), Peashooter.GetCost() * 3.25f, Peashooter.GetHP(), Peashooter.GetSpeed()),
+		TangleKelp = CellContent(COLOR(100), std::string("Tangle Kelp"), 1),
+		Jalapeno = CellContent(CherryBomb.GetColor(), std::string("Jalapeno"), 5),
+		SpikeWeed = CellContent(WallNut.GetColor(), std::string("SpikeWeed"), 4),
+		TorchWood = CellContent(COLOR(202), std::string("TorchWood"), 7),
+		TallNut = CellContent(WallNut.GetColor(), std::string("TallNut"), WallNut.GetCost() * 2.25f, WallNut.GetHP() * 2.25f),
+
+		// Fog Levels
+		SeaShroom = CellContent(COLOR(37), std::string("Sea-Shroom"), 0),
+		Plantern = CellContent(COLOR(226), std::string("Plantern"), 1),
+		Cactus = CellContent(COLOR(82), std::string("Cactus"), 5, Peashooter.GetHP(), Peashooter.GetSpeed()),
+		Blover = CellContent(COLOR(22), std::string("Blover"), 4),
+		SplitPea = CellContent(Peashooter.GetColor(), std::string("Split Peashooter"), Peashooter.GetCost() * 1.25f, Peashooter.GetHP(), Peashooter.GetSpeed()),
+		StarFruit = CellContent(COLOR(184), std::string("Starfruit"), Peashooter.GetCost() * 1.25f, Peashooter.GetHP(), Peashooter.GetSpeed()),
+		Pumpkin = CellContent(COLOR(172), std::string("Pumpkin"), WallNut.GetCost() * 2.25f, WallNut.GetHP()),
+		MagnetShroom = CellContent(COLOR(127), std::string("Magnet-Shroom"), 4),
+
+		// Roof Levels
+		CabbagePult = CellContent(COLOR(34), std::string("Cabbage-Pult"), Peashooter.GetCost(), Peashooter.GetHP(), Peashooter.GetSpeed()),
+		FlowerPot = CellContent(LilyPad.GetColor(), std::string("Flower Pot"), LilyPad.GetCost(), Peashooter.GetHP()),
+		KernelPult = CellContent(Sunflower.GetColor(), std::string("Kernel-Pult"), Peashooter.GetCost(), Peashooter.GetHP(), Peashooter.GetSpeed()),
+		CoffeBean = CellContent(WallNut.GetColor(), std::string("Coffe Bean"), 3),
+		Garlic = CellContent(COLOR(255), std::string("Garlic"), 2),
+		UmbrellaLeaf = CellContent(Peashooter.GetColor(), std::string("Umbrella Leaf"), 4),
+		Marigold = CellContent(COLOR(220), std::string("Marigold"), Sunflower.GetCost(), Sunflower.GetHP(), Sunflower.GetSpeed()),
+		MelonPult = CellContent(CabbagePult.GetColor(), std::string("Melon-Pult"), CabbagePult.GetCost() * 4, CabbagePult.GetHP(), CabbagePult.GetSpeed())
+
+		//// Extra Plants
+		//GatlingPea = CellContent(COLOR(46), std::string("GatlingPea"), Repeater.GetCost() * 2, 6, Repeater.GetSpeed() * .5f),
+		//TwinSunFlower = CellContent(COLOR(220), std::string("TwinSunFlower"), Sunflower.GetCost() * 3, 6, Sunflower.GetSpeed() * .5f),
+		//GloomShroom,
+		//CatTail,
+		//WinterPult,
+		//GoldMagnet,
+		//SpikeRock,
+		//CobCannon,
+
+		//// IMITATOR
+		//Imitator
 		;
 
 	// Zombies Cells
@@ -168,7 +182,7 @@ void GameLoop() {
 		FlagBasic = CellContent(COLOR(1), std::string("Flag Basic"), 0, Basic.GetHP() * 1.25f, Basic.GetSpeed() * 1.25f),
 		ConeHead = CellContent(COLOR(208), std::string("Cone Head"), Basic.GetCost() * 2, Basic.GetHP() * 2, Basic.GetSpeed()),
 		PoleVault = CellContent(COLOR(74), std::string("Pole Vault"), Basic.GetCost() * 4, Basic.GetHP() * 2, Basic.GetSpeed() / 2),
-		BucketHead = CellContent("\033[97m", std::string("Bucket Head"), Basic.GetCost() * 3, Basic.GetHP() * 3, Basic.GetSpeed()),
+		BucketHead = CellContent(COLOR(255), std::string("Bucket Head"), Basic.GetCost() * 3, Basic.GetHP() * 3, Basic.GetSpeed()),
 		NewsPaper,
 		ScreenDoor,
 		FootBall,
