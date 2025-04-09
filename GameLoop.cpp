@@ -197,7 +197,8 @@ void GameLoop() {
 	GameBoard plantsBoard, zombiesBoard, gameBoard;
 	Coords plantsBoardSelection{}, zombiesBoardSelection{}, gameBoardSelection{};
 
-	std::function<void()> ReStart = [&]() {
+	bool gameloop = false;
+	std::function<void()> ReStart = [&](){
 
 		// Console and console font size
 		SetConsoleFontSize(res * .1f);
@@ -254,26 +255,27 @@ void GameLoop() {
 			plantsBoardSize.x = 6;
 			break;
 		case 5:
-			level.SetPlantsTypes({ Peashooter, Sunflower, CherryBomb, WallNut });
-			level.SetZombiesTypes({ Basic, FlagBasic, ConeHead, PoleVault });
+			gameloop = false; break;
+		//	level.SetPlantsTypes({ Peashooter, Sunflower, CherryBomb, WallNut });
+		//	level.SetZombiesTypes({ Basic, FlagBasic, ConeHead, PoleVault });
 
-			gameBoardSize.y = 5;
-			plantsBoardSize.x = 6;
-			break;
-		case 6:
-			level.SetPlantsTypes({ Peashooter, Sunflower, CherryBomb, WallNut });
-			level.SetZombiesTypes({ Basic, FlagBasic, ConeHead, PoleVault });
+		//	gameBoardSize.y = 5;
+		//	plantsBoardSize.x = 6;
+		//	break;
+		//case 6:
+		//	level.SetPlantsTypes({ Peashooter, Sunflower, CherryBomb, WallNut });
+		//	level.SetZombiesTypes({ Basic, FlagBasic, ConeHead, PoleVault });
 
-			gameBoardSize.y = 5;
-			plantsBoardSize.x = 6;
-			break;
-		case 7:
-			level.SetPlantsTypes(ChooseSeeds({ Peashooter, Sunflower, CherryBomb, WallNut }, plantsBoard, plantsBoardSelection));
-			level.SetZombiesTypes({ Basic, FlagBasic, ConeHead, PoleVault, BucketHead });
+		//	gameBoardSize.y = 5;
+		//	plantsBoardSize.x = 6;
+		//	break;
+		//case 7:
+		//	level.SetPlantsTypes(ChooseSeeds({ Peashooter, Sunflower, CherryBomb, WallNut }, plantsBoard, plantsBoardSelection));
+		//	level.SetZombiesTypes({ Basic, FlagBasic, ConeHead, PoleVault, BucketHead });
 
-			gameBoardSize.y = 5;
-			plantsBoardSize.x = 6;
-			break;
+		//	gameBoardSize.y = 5;
+		//	plantsBoardSize.x = 6;
+		//	break;
 		}
 
 		plantsBoardSize.x += 2; // Goes up to 10 + 2
@@ -337,7 +339,6 @@ void GameLoop() {
 		};
 
 	// Start
-	bool gameloop = false;
 	Start(gameloop, ReStart);
 
 	// Update
