@@ -1,4 +1,6 @@
 # Plants vs. Zombies in C++ (Windows CMD)
+Project creation date: Sunday, March 16 2025
+
 
 This is a command-line implementation of a **Plants vs. Zombies**-style game written in **C++**. It features an object-oriented design with an **ECS-style architecture** and **fixed time step** for updates. Rendering is done using **std::cout**, and input handling uses **getch()**.
 
