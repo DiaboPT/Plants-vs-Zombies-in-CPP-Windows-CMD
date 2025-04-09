@@ -3,7 +3,7 @@
 #include <vector>
 
 #include "CellContent.hpp"
-#include "FrameWork/FrameWork.hpp"
+#include "cppFrameWork/FrameWork.hpp"
 
 // GameBoard class
 class GameBoard {
@@ -12,11 +12,14 @@ private:
 	std::vector<std::vector<CellContent>> cell;
 
 public:
-	GameBoard(int x, int y);
+	GameBoard(Coords size);
 	GameBoard();
 
 	const std::string DrawBoard(Coords selected, std::string selectedColor, std::string resetColor);
 
 	void SetCell(Coords coords, CellContent value);
 	CellContent GetCell(Coords coords);
+
+	void SetGrid(Coords value);
+	Coords GetGrid();
 };

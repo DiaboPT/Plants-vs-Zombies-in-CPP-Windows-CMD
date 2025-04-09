@@ -20,7 +20,7 @@
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="CellContent.cpp" />
-    <ClCompile Include="FrameWork\FrameWork.cpp" />
+    <ClCompile Include="cppFrameWork\FrameWork.cpp" />
     <ClCompile Include="GameBoard.cpp" />
     <ClCompile Include="GameLoop.cpp" />
     <ClCompile Include="Levels.cpp" />
@@ -30,7 +30,7 @@
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="CellContent.hpp" />
-    <ClInclude Include="FrameWork\FrameWork.hpp" />
+    <ClInclude Include="cppFrameWork\FrameWork.hpp" />
     <ClInclude Include="GameBoard.hpp" />
     <ClInclude Include="GameLoop.hpp" />
     <ClInclude Include="Levels.hpp" />
