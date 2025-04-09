@@ -137,7 +137,7 @@ void GameLoop() {
 
 	// Plants Cells
 	// Info : https://plantsvszombies.fandom.com/wiki/Plants_(PvZ)
-	const CellContent
+	CellContent
 
 		// Day Levels
 		Peashooter = CellContent(COLOR(46), std::string("Peashooter"), 4, 6, 1.5f),
@@ -479,8 +479,8 @@ void GameLoop() {
 						if (fmod(frameCount, fps * CherryBomb.GetSpeed()) < 1) {
 							// PlayCherryBombExplodeSound();
 
-							for (int j = max(0, y - 1); j <= min(gameBoardSize.y - 1, y + 1); j++) {
-								for (int i = max(0, x - 1); i <= min(gameBoardSize.x - 1, x + 1); i++) {
+							for (int j = std::max(0, y - 1); j <= std::min(gameBoardSize.y - 1, y + 1); j++) {
+								for (int i = std::max(0, x - 1); i <= std::min(gameBoardSize.x - 1, x + 1); i++) {
 
 									for (int k = 0; k < level.GetZombiesTypes().size(); k++) {
 										if (gameBoard.GetCell({ i, j }).Get_Name() == level.GetZombiesTypes()[k].Get_Name()) {
