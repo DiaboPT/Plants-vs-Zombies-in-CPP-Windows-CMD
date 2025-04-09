@@ -372,7 +372,6 @@ void GameLoop() {
 		};
 
 	// Start
-		level.SetLevel({ 7 , 0 });
 	Start(gameloop, ReStart);
 
 	// Update
