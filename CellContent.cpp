@@ -1,33 +1,19 @@
 #include "CellContent.hpp"
 
-CellContent::CellContent() : name(" "), cost(0), hp(0), speed(0) {}
+void CellContentClass::Name(std::string value) { name = value; }
+const std::string CellContentClass::Name() const { return color + name; }
+const char CellContentClass::Char() const { return name != "" ? name[0] : ' '; }
 
-CellContent::CellContent(std::string new_color, std::string new_name, int new_cost)
-	: color(new_color), name(new_name), cost(new_cost), hp(0), speed(0) {
-}
+void CellContentClass::Color(std::string value) { color = value; }
+const std::string CellContentClass::Color() const { return color; }
 
-CellContent::CellContent(std::string new_color, std::string new_name, int new_cost, int new_hp)
-	: color(new_color), name(new_name), cost(new_cost), hp(new_hp), speed(0) {
-}
+void CellContentClass::Cost(int value) { cost = value; }
+const int CellContentClass::Cost() const { return cost; }
+void CellContentClass::AddCost(int value) { cost += value; }
 
-CellContent::CellContent(std::string new_color, std::string new_name, int new_cost, int new_hp, float new_speed)
-	: color(new_color), name(new_name), cost(new_cost), speed(new_speed), hp(new_hp) {
-}
+void CellContentClass::HP(int value) { hp = value; }
+const int CellContentClass::HP() const { return hp; }
+void CellContentClass::AddHP(int value) { hp += value; }
 
-void CellContent::Set_Name(std::string value) { name = value; }
-const std::string CellContent::Get_Name() const { return color + name; }
-const char CellContent::Get_Char() const { return name[0]; }
-
-void CellContent::SetColor(std::string value) { color = value; }
-const std::string CellContent::GetColor() const { return color; }
-
-void CellContent::SetCost(int value) { cost = value; }
-void CellContent::AddCost(int value) { cost += value; }
-const int CellContent::GetCost() const { return cost; }
-
-void CellContent::SetHP(int value) { hp = value; }
-void CellContent::AddHP(int value) { hp += value; }
-const int CellContent::GetHP() const { return hp; }
-
-void CellContent::SetSpeed(float value) { speed = value; }
-const float CellContent::GetSpeed() const { return speed; }
+void CellContentClass::Speed(float value) { speed = value / 1000.f; }
+const float CellContentClass::Speed() const { return speed; }
