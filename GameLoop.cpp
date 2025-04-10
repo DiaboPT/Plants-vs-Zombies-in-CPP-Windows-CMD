@@ -206,6 +206,7 @@ void GameLoop() {
 			zombiesCurrency.Cost(4);
 			break;
 		case 5:
+			level.SetLevel({ level.GetLevel().x - 1 , level.GetLevel().y });
 			gameloop = false; break;
 		case 7:
 			gameBoardSize.y = 5;
