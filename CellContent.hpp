@@ -23,7 +23,7 @@ enum SpeedEnum {
 // CellContentClass class
 class CellContentClass {
 private:
-	std::string name = "";
+	std::string name = " ";
 	std::string color = "";
 
 	int cost = 0;
@@ -71,6 +71,7 @@ public:
 };
 
 static CellContentClass Nothing, plantsCurrency, zombiesCurrency;
+static int InicialPlantsCurrency = 2, InicialZombiesCurrency = 6;
 
 // Plants Cells
 // Info : https://plantsvszombies.fandom.com/wiki/Plants_(PvZ)
@@ -82,64 +83,63 @@ const CellContentClass
 		std::string("Peashooter"),
 		4,
 		HPEnum::Standard,
-		SpeedEnum::Normal
-	),
+		SpeedEnum::Normal)
+	,
 	Sunflower = CellContentClass(
 		COLOR(220),
 		std::string("Sunflower"),
 		2,
 		HPEnum::Standard,
-		SpeedEnum::SunProduction
-	),
+		SpeedEnum::SunProduction)
+	,
 	CherryBomb = CellContentClass(
 		COLOR(1),
 		std::string("Cherry Bomb"),
 		6,
 		HPEnum::Standard,
-		SpeedEnum::Instant
-	),
+		SpeedEnum::Instant)
+	,
 	WallNut = CellContentClass(
 		COLOR(130),
 		std::string("Wall-Nut"),
 		2,
 		HPEnum::Tankier,
-		SpeedEnum::Normal
-	),
+		SpeedEnum::Normal)
+	,
 	RollingWallNut = CellContentClass(
 		COLOR(208),
 		std::string("Rolling Wall-Nut"),
-		0,
+		2,
 		HPEnum::Tankier,
-		SpeedEnum::Normal
-	),
+		SpeedEnum::Normal / 2)
+	,
 	PotatoMine = CellContentClass(
 		COLOR(130),
 		std::string("Potato Mine"),
 		1,
 		HPEnum::Standard,
-		SpeedEnum::Instant
-	),
+		SpeedEnum::Instant)
+	,
 	SnowPea = CellContentClass(
 		COLOR(74),
 		std::string("Snow Peashooter"),
 		Peashooter.Cost() * 1.75f,
 		HPEnum::Standard,
-		SpeedEnum::Normal
-	),
+		SpeedEnum::Normal)
+	,
 	Chomper = CellContentClass(
 		COLOR(93),
 		std::string("Chomper"),
 		6,
 		HPEnum::Tanky,
-		SpeedEnum::Normal
-	),
+		SpeedEnum::Normal)
+	,
 	Repeater = CellContentClass(
 		COLOR(46),
 		std::string("Repeater"),
 		Peashooter.Cost() * 2,
 		HPEnum::Standard,
-		SpeedEnum::Normal
-	)
+		SpeedEnum::Normal)
 
 	//// Night Levels
 	//PuffShroom = CellContentClass(COLOR(93), std::string("Puff-Shroom"), 0),
@@ -203,7 +203,7 @@ const CellContentClass
 	Zombie = CellContentClass(
 		COLOR(165),
 		std::string("Zombie"),
-		5,
+		4 + InicialZombiesCurrency,
 		HPEnum::ZombieHP,
 		SpeedEnum::ZombieSpeed
 	),

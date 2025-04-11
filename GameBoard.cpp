@@ -1,12 +1,19 @@
 
 #include "GameBoard.hpp"
 
-GameBoard::GameBoard(Coords size) : cell(size.x, std::vector<CellContentClass>(size.y)) {
-	grid = size;
-}
-
 GameBoard::GameBoard() {
 	grid = { 0, 0 };
+}
+
+GameBoard::GameBoard(Coords size) : cell(size.x, std::vector<CellContentClass>(size.y)) {
+	grid = size;
+
+	for (int y = 0; y < grid.y; y++) {
+		for (int x = 0; x < grid.x; x++) {
+			GameBoard::SetCell(grid, Nothing);
+		}
+	}
+
 }
 
 const std::string GameBoard::DrawBoard(Coords selected, std::string selectedColor, std::string resetColor) {
@@ -43,20 +50,20 @@ const std::string GameBoard::DrawBoard(Coords selected, std::string selectedColo
 
 void GameBoard::SetCell(Coords coords, CellContentClass value) {
 	cell
-		[(coords.x < 0) ? 0 : (coords.x > grid.x - 1) ? grid.x - 1 : coords.x]
-		[(coords.y < 0) ? 0 : (coords.y > grid.y - 1) ? grid.y - 1 : coords.y]
+		[(coords.x < 0) ? 0 : (coords.x > grid.x - 1) ? static_cast<std::vector<std::vector<CellContentClass, std::allocator<CellContentClass>>, std::allocator<std::vector<CellContentClass, std::allocator<CellContentClass>>>>::size_type>(grid.x) - 1 : coords.x]
+		[(coords.y < 0) ? 0 : (coords.y > grid.y - 1) ? static_cast<std::vector<CellContentClass, std::allocator<CellContentClass>>::size_type>(grid.y) - 1 : coords.y]
 		= value;
 }
 
 CellContentClass GameBoard::GetCell(Coords coords) {
 	return cell
-		[(coords.x < 0) ? 0 : (coords.x > grid.x - 1) ? grid.x - 1 : coords.x]
-		[(coords.y < 0) ? 0 : (coords.y > grid.y - 1) ? grid.y - 1 : coords.y];
+		[(coords.x < 0) ? 0 : (coords.x > grid.x - 1) ? static_cast<std::vector<std::vector<CellContentClass, std::allocator<CellContentClass>>, std::allocator<std::vector<CellContentClass, std::allocator<CellContentClass>>>>::size_type>(grid.x) - 1 : coords.x]
+		[(coords.y < 0) ? 0 : (coords.y > grid.y - 1) ? static_cast<std::vector<CellContentClass, std::allocator<CellContentClass>>::size_type>(grid.y) - 1 : coords.y];
 }
 
 void GameBoard::SetGrid(Coords value) {
 	grid = value;
 }
-Coords GameBoard::GetGrid() {
+Coords GameBoard::GetGrid() const {
 	return grid;
 }

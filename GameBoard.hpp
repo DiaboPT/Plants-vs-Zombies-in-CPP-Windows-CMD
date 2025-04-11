@@ -12,8 +12,8 @@ private:
 	std::vector<std::vector<CellContentClass>> cell;
 
 public:
-	GameBoard(Coords size);
 	GameBoard();
+	GameBoard(Coords);
 
 	const std::string DrawBoard(Coords selected, std::string selectedColor, std::string resetColor);
 
@@ -21,5 +21,7 @@ public:
 	CellContentClass GetCell(Coords coords);
 
 	void SetGrid(Coords value);
-	Coords GetGrid();
+	Coords GetGrid() const;
 };
+
+static GameBoard plantsBoard, zombiesBoard, gameBoard;

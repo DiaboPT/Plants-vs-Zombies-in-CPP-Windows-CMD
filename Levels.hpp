@@ -41,3 +41,5 @@ public:
 	void ClearTypes();
 
 };
+
+static Levels level = Levels();

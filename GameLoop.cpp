@@ -10,10 +10,23 @@ const int Res = 108;
 const int Width = 16, Height = 9, Lenght = 5;
 Coords size{ Width , Height , Lenght };
 
-static std::vector<CellContentClass> ChooseSeeds(std::vector<CellContentClass> Seeds, Coords plantsBoardSize, Coords plantsBoardSelection) {
+// Boards Size
+static Coords
+	plantsBoardSize{},
+	plantsBoardSelection{},
+
+	zombiesBoardSize{},
+	zombiesBoardSelection{},
+
+	gameBoardSize{},
+	gameBoardSelection{}
+;
+
+static std::vector<CellContentClass> ChooseSeeds(std::vector<CellContentClass> Seeds) {
 	std::vector<CellContentClass> vectorCellContent;
 
 	Coords seedsTableSelection{}, seedsTableSize{ 8 , 6 };
+	Coords plantsBoardSelection{};
 	GameBoard seedsTable = GameBoard(seedsTableSize);
 	GameBoard plantsBoard({ plantsBoardSize.x , 1 });
 
@@ -24,6 +37,12 @@ static std::vector<CellContentClass> ChooseSeeds(std::vector<CellContentClass> S
 				seedsTable.SetCell({ x , y }, Seeds[seedIndex]);
 				seedIndex++;
 			}
+		}
+	}
+
+	for (int y = 0; y < plantsBoardSize.y; y++) {
+		for (int x = 0; x < plantsBoardSize.x; x++) {
+			plantsBoard.SetCell({ x , y }, Nothing);
 		}
 	}
 
@@ -51,18 +70,11 @@ static std::vector<CellContentClass> ChooseSeeds(std::vector<CellContentClass> S
 				// Get the seed at the current position
 				CellContentClass selectedSeed = seedsTable.GetCell(seedsTableSelection);
 				// Check if there's already a plant in the selected position
-				if (plantsBoard.GetCell(plantsBoardSelection).Name() != "") {
+				(plantsBoard.GetCell(plantsBoardSelection).Name() != selectedSeed.Name()) ?
 					// Place the plant on the plants board
-					plantsBoard.SetCell(plantsBoardSelection, selectedSeed);
-					// Mark the seed as used (turn grey in the seeds table)
-					seedsTable.SetCell(seedsTableSelection, CellContentClass(COLOR(20), selectedSeed.Name(), selectedSeed.Cost(), selectedSeed.HP(), selectedSeed.Speed()));
-				}
-				else {
+					plantsBoard.SetCell(plantsBoardSelection, selectedSeed) :
 					// Remove the plant from the plants board
-					plantsBoard.SetCell(plantsBoardSelection, CellContentClass()); // Empty cell
-					// Restore the seed to its original color
-					seedsTable.SetCell(seedsTableSelection, selectedSeed);
-				}
+					plantsBoard.SetCell(plantsBoardSelection, Nothing); // Empty cell
 			}
 			break;
 			case 27:
@@ -71,32 +83,42 @@ static std::vector<CellContentClass> ChooseSeeds(std::vector<CellContentClass> S
 			}
 		}
 
-		output += RESET;
-		output += "\nPlants Board:\n" + plantsBoard.DrawBoard(plantsBoardSelection, COLOR(46), PLANTRESET);
-		output += RESET;
+		output = RESET +
+			std::string("World ") +
+			std::to_string(level.GetLevel().y + 1) +
+			"-" +
+			std::to_string(level.GetLevel().x + 1) +
+			"\n" + RESET +
 
-		output += "\nSeeds Board:\n" + seedsTable.DrawBoard(seedsTableSelection, COLOR(220), GAMERESET);
-		output += RESET;
+			"Objective: Defeat " + FlagZombie.Name() + RESET +
+			"\n" + RESET +
 
-		output += "Selected: ";
+			"\n" +
+			plantsBoard.DrawBoard(plantsBoardSelection, COLOR(46), PLANTRESET) +
+			"\n" + RESET +
+			seedsTable.DrawBoard(seedsTableSelection, COLOR(220), GAMERESET) +
+			"\n" + RESET +
 
-		output += "\n- Name: ";
-		output += std::string(seedsTable.GetCell(seedsTableSelection).Color()) + std::string(seedsTable.GetCell(seedsTableSelection).Name());
-		output += RESET + std::string("                                    ");
-		output += "\n";
+			"Selected: " +
+			"\n" + RESET +
 
-		output += "- HP: ";
-		output +=
-			seedsTable.GetCell(seedsTableSelection).HP() > 9 ?
-			std::to_string(seedsTable.GetCell(seedsTableSelection).HP()) + " " :
-			"0" + std::to_string(seedsTable.GetCell(seedsTableSelection).HP());
-		output += RESET + std::string("                                    ");
-		output += "\n";
+			"- Name: " +
+			std::string(seedsTable.GetCell(seedsTableSelection).Name()) +
+			RESET + std::string("                                    ") +
+			"\n" + RESET +
+
+			"- HP: " +
+			((seedsTable.GetCell(seedsTableSelection).HP() > 9) ?
+				std::to_string(seedsTable.GetCell(seedsTableSelection).HP()) + " " :
+				"0" + std::to_string(seedsTable.GetCell(seedsTableSelection).HP())) +
+			RESET + std::string("                                    ") +
+			"\n" + RESET
+			;
 		});
 
 	// Resize vectorCellContent to match the board size
 	auto gridSize = plantsBoard.GetGrid();
-	vectorCellContent.resize(gridSize.x * gridSize.y); // Resize the vector to fit the board's cells
+	vectorCellContent.resize(static_cast<std::vector<CellContentClass, std::allocator<CellContentClass>>::size_type>(gridSize.x) * gridSize.y); // Resize the vector to fit the board's cells
 
 	int index = 0;
 	for (int y = 0; y < gridSize.y; y++) {
@@ -125,7 +147,6 @@ static bool AreAllZombiesGone(Coords gameBoardSize, Levels level, GameBoard game
 void GameLoop() {
 
 	// Extra Inicializations for especific game
-	Levels level = Levels();
 	bool isLastFlag = false;
 	bool winConditionReached = false;
 	bool flagZombieSpawned = false;
@@ -134,13 +155,8 @@ void GameLoop() {
 	// Importante Cells
 	int zombieTimeCount = 0;
 
-	// Boards Size
-	Coords plantsBoardSize{}, zombiesBoardSize{}, gameBoardSize{};
-	GameBoard plantsBoard, zombiesBoard, gameBoard;
-	Coords plantsBoardSelection{}, zombiesBoardSelection{}, gameBoardSelection{};
-
 	bool gameloop = false;
-	std::function<void()> ReStart = [&](){
+	std::function<void()> ReStart = [&]() {
 
 		// Console and console font size
 		ConsoleFontSize(Res * .25f);
@@ -154,11 +170,13 @@ void GameLoop() {
 		plantsCurrency = CellContentClass(
 			COLOR(220),
 			std::string("Currency"),
-			2,
+			InicialPlantsCurrency,
 			0,
 			SpeedEnum::AutoProduction
 		);
-		zombiesCurrency = CellContentClass(plantsCurrency);
+		zombiesCurrency = plantsCurrency;
+		zombiesCurrency.Cost(InicialZombiesCurrency);
+
 		zombieTimeCount = 1;
 		gameBoardSize.y = 1;
 
@@ -202,17 +220,16 @@ void GameLoop() {
 			level.SetPlantsTypes({ RollingWallNut });
 			level.SetZombiesTypes({ Zombie, FlagZombie, ConeHead });
 
-			zombieTimeCount = 5;
-			zombiesCurrency.Cost(4);
+			zombieTimeCount = Zombie.Cost() * .5f;
+			plantsCurrency.Cost(0);
 			break;
 		case 5:
-			level.SetLevel({ level.GetLevel().x - 1 , level.GetLevel().y });
 			gameloop = false; break;
 		case 7:
 			gameBoardSize.y = 5;
 			plantsBoardSize.x = 6;
 
-			level.SetPlantsTypes(ChooseSeeds({ Peashooter, Sunflower, CherryBomb, WallNut }, plantsBoardSize, plantsBoardSelection));
+			level.SetPlantsTypes(ChooseSeeds({ Peashooter, Sunflower, CherryBomb, WallNut, PotatoMine }));
 			level.SetZombiesTypes({ Zombie, FlagZombie, ConeHead, PoleVault, BucketHead });
 			break;
 		}
@@ -241,7 +258,7 @@ void GameLoop() {
 				else {
 					int index = x - 2;
 					if (index < level.GetPlantsTypes().size()) {
-						plantsBoard.SetCell({ x, y }, y == 0 ? 
+						plantsBoard.SetCell({ x, y }, y == 0 ?
 							level.GetPlantsTypes()[index] :
 							CellContentClass(std::string(level.GetPlantsTypes()[index].Color()), std::to_string(level.GetPlantsTypes()[index].Cost()), level.GetPlantsTypes()[index].Cost()));
 					}
@@ -300,26 +317,34 @@ void GameLoop() {
 				}
 
 				switch (key) {
-				case 'q': case 'Q': if (plantsBoardSelection.x > 2) plantsBoardSelection.x--; break;
-				case 'e': case 'E': if (plantsBoardSelection.x < (level.GetPlantsTypes().size() + 2) - 1) plantsBoardSelection.x++; break;
+					case 'q': case 'Q': if (plantsBoardSelection.x > 2) plantsBoardSelection.x--; break;
+					case 'e': case 'E': if (plantsBoardSelection.x < (level.GetPlantsTypes().size() + 2) - 1) plantsBoardSelection.x++; break;
 
-				case 'w': case 'W': if (gameBoardSelection.y > 0) gameBoardSelection.y--; break;
-				case 'a': case 'A': if (gameBoardSelection.x > 0) gameBoardSelection.x--; break;
-				case 's': case 'S': if (gameBoardSelection.y < gameBoardSize.y - 1) gameBoardSelection.y++; break;
-				case 'd': case 'D': if (gameBoardSelection.x < gameBoardSize.x - 1) gameBoardSelection.x++; break;
+					case 'w': case 'W': if (gameBoardSelection.y > 0) gameBoardSelection.y--; break;
+					case 'a': case 'A': if (gameBoardSelection.x > 0) gameBoardSelection.x--; break;
+					case 's': case 'S': if (gameBoardSelection.y < gameBoardSize.y - 1) gameBoardSelection.y++; break;
+					case 'd': case 'D': if (gameBoardSelection.x < gameBoardSize.x - 1) gameBoardSelection.x++; break;
 
-				case 'r': case 'R': ReStart();
+					case '1': level.SetLevel({ 0, 0 }); ReStart(); break;
+					case '2': level.SetLevel({ 1, 0 }); ReStart(); break;
+					case '3': level.SetLevel({ 2, 0 }); ReStart(); break;
+					case '4': level.SetLevel({ 3, 0 }); ReStart(); break;
+					case '5': level.SetLevel({ 4, 0 }); ReStart(); break;
+					// case '6': level.SetLevel({ 5, 0 }); ReStart(); break;
+					case '7': level.SetLevel({ 6, 0 }); ReStart(); break;
 
-				case ' ':
-					if (hasMoney && canPlace) {
-						plantsCurrency.AddCost(gameBoard.GetCell(gameBoardSelection).Cost() * .5f);
-						gameBoard.SetCell(gameBoardSelection, plantsBoard.GetCell(plantsBoardSelection));
-						plantsCurrency.AddCost(-plantsBoard.GetCell({ plantsBoardSelection.x, 1 }).Cost());
-					}
-					break;
-				case 27:
-					gameloop = false;
-					break;
+					case 'r': case 'R': ReStart(); break;
+
+					case ' ':
+						if (hasMoney && canPlace) {
+							plantsCurrency.AddCost(gameBoard.GetCell(gameBoardSelection).Cost() * .5f);
+							gameBoard.SetCell(gameBoardSelection, plantsBoard.GetCell(plantsBoardSelection));
+							plantsCurrency.AddCost(-plantsBoard.GetCell({ plantsBoardSelection.x, 1 }).Cost());
+						}
+						break;
+					case 27:
+						gameloop = false;
+						break;
 				}
 			}
 
@@ -552,44 +577,43 @@ void GameLoop() {
 			}
 
 			plantsBoard.SetCell({ 0, 1 }, CellContentClass(std::string(plantsCurrency.Color()), std::to_string(plantsCurrency.Cost()), plantsCurrency.Cost()));
-			zombiesBoard.SetCell({ 0, 1 }, CellContentClass(std::string(zombiesCurrency.Color()), std::to_string(zombiesCurrency.Cost()), zombiesCurrency.Cost()));
 
-			output = RESET;
-			output += "World " + std::to_string(level.GetLevel().y + 1) + "-" + std::to_string(level.GetLevel().x + 1);
-			output += "\n";
-			output += RESET;
-
-			output += "Objective: Defeat " + FlagZombie.Name() + RESET;
-			output += "\n";
-			output += RESET;
-
-			output += "\n";
-			output += "Plants Board:\n" + plantsBoard.DrawBoard(plantsBoardSelection, COLOR(46), PLANTRESET);
-			output += "\n";
-			output += RESET;
-
-			output += "Game Board:\n" + gameBoard.DrawBoard(gameBoardSelection, COLOR(220), GAMERESET);
-			output += RESET;
-
-			output += "Selected: ";
-			output += "\n";
-
-			output += "- Name: ";
-			output += std::string(gameBoard.GetCell(gameBoardSelection).Color()) + std::string(gameBoard.GetCell(gameBoardSelection).Name());
-			output += RESET + std::string("                                    ");
-			output += "\n";
-
-			output += "- HP: ";
-			output +=
-				gameBoard.GetCell(gameBoardSelection).HP() > 9 ?
+			output = RESET + 
+				std::string("World ") +
+				std::to_string(level.GetLevel().y + 1) +
+				"-" +
+				std::to_string(level.GetLevel().x + 1) +
+				"\n" + RESET +
+				
+				"Objective: Defeat " + FlagZombie.Name() + RESET +
+				"\n" + RESET +
+				
+				"\n" +
+				plantsBoard.DrawBoard(plantsBoardSelection, COLOR(46), PLANTRESET) +
+				"\n" + RESET +
+				gameBoard.DrawBoard(gameBoardSelection, COLOR(220), GAMERESET) +
+				"\n" + RESET +
+				
+				"Selected: " +
+				"\n" + RESET +
+					
+				"- Name: " +
+				std::string(gameBoard.GetCell(gameBoardSelection).Color()) + std::string(gameBoard.GetCell(gameBoardSelection).Name()) +
+				RESET + std::string("                                    ") +
+				"\n" + RESET +
+				
+				"- HP: " +
+				std::string(gameBoard.GetCell(gameBoardSelection).HP() > 9 ?
 				std::to_string(gameBoard.GetCell(gameBoardSelection).HP()) + " " :
-				"0" + std::to_string(gameBoard.GetCell(gameBoardSelection).HP());
-			output += RESET + std::string("                                    ");
-			output += "\n";
-
-			output += "\n";
-			output += "Zombies Board:\n" + std::string(PLANTRESET) + zombiesBoard.DrawBoard(zombiesBoardSelection, COLOR(165), PLANTRESET);
-			output += RESET;
+				"0" + std::to_string(gameBoard.GetCell(gameBoardSelection).HP())) +
+				RESET + std::string("                                    ") +
+				"\n" + RESET
+				
+				//+
+				//"\n" +
+				//"Zombies Board:\n" + std::string(PLANTRESET) + zombiesBoard.DrawBoard(zombiesBoardSelection, COLOR(165), PLANTRESET)+ 
+				//"\n" + RESET
+				;
 
 			// Last Wave
 			if (!winConditionReached && zombiesCurrency.Cost() >= level.GetWinCondiction()) {
@@ -622,6 +646,7 @@ void GameLoop() {
 
 	ClearScreen();
 
+	level.SetLevel({ level.GetLevel().x - 1 , level.GetLevel().y });
 	std::cout << RESET;
 	std::cout << "\n";
 	std::cout << "+---------------------+\n";
