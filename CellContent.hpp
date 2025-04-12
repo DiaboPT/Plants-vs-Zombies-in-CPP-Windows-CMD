@@ -27,8 +27,8 @@ private:
 	std::string color = "";
 
 	int cost = 0;
-	int hp = HPEnum::Standard;
-	float speed = SpeedEnum::Normal / 1000.f;
+	int hp = 0;
+	float speed = 0;
 
 public:
 	CellContentClass() {}
@@ -109,7 +109,7 @@ const CellContentClass
 	RollingWallNut = CellContentClass(
 		COLOR(208),
 		std::string("Rolling Wall-Nut"),
-		2,
+		1,
 		HPEnum::Tankier,
 		SpeedEnum::Normal / 2)
 	,

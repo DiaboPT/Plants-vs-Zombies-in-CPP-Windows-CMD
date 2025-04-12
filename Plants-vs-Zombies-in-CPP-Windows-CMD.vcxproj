@@ -24,7 +24,7 @@
     <ClCompile Include="GameBoard.cpp" />
     <ClCompile Include="GameLoop.cpp" />
     <ClCompile Include="Levels.cpp" />
-    <ClCompile Include="main.cpp" />
+    <ClCompile Include="source.cpp" />
     <ClCompile Include="Random.cpp" />
     <ClCompile Include="SFX.cpp" />
   </ItemGroup>

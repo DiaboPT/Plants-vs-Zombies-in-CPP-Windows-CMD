@@ -10,7 +10,7 @@ GameBoard::GameBoard(Coords size) : cell(size.x, std::vector<CellContentClass>(s
 
 	for (int y = 0; y < grid.y; y++) {
 		for (int x = 0; x < grid.x; x++) {
-			GameBoard::SetCell(grid, Nothing);
+			GameBoard::Cell(grid, Nothing);
 		}
 	}
 
@@ -48,22 +48,22 @@ const std::string GameBoard::DrawBoard(Coords selected, std::string selectedColo
 	return returned;
 }
 
-void GameBoard::SetCell(Coords coords, CellContentClass value) {
+void GameBoard::Cell(Coords coords, CellContentClass value) {
 	cell
 		[(coords.x < 0) ? 0 : (coords.x > grid.x - 1) ? static_cast<std::vector<std::vector<CellContentClass, std::allocator<CellContentClass>>, std::allocator<std::vector<CellContentClass, std::allocator<CellContentClass>>>>::size_type>(grid.x) - 1 : coords.x]
 		[(coords.y < 0) ? 0 : (coords.y > grid.y - 1) ? static_cast<std::vector<CellContentClass, std::allocator<CellContentClass>>::size_type>(grid.y) - 1 : coords.y]
 		= value;
 }
 
-CellContentClass GameBoard::GetCell(Coords coords) {
+CellContentClass GameBoard::Cell(Coords coords) {
 	return cell
 		[(coords.x < 0) ? 0 : (coords.x > grid.x - 1) ? static_cast<std::vector<std::vector<CellContentClass, std::allocator<CellContentClass>>, std::allocator<std::vector<CellContentClass, std::allocator<CellContentClass>>>>::size_type>(grid.x) - 1 : coords.x]
 		[(coords.y < 0) ? 0 : (coords.y > grid.y - 1) ? static_cast<std::vector<CellContentClass, std::allocator<CellContentClass>>::size_type>(grid.y) - 1 : coords.y];
 }
 
-void GameBoard::SetGrid(Coords value) {
+void GameBoard::Grid(Coords value) {
 	grid = value;
 }
-Coords GameBoard::GetGrid() const {
+Coords GameBoard::Grid() const {
 	return grid;
 }

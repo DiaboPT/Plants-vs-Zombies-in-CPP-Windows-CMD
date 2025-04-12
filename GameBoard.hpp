@@ -17,11 +17,11 @@ public:
 
 	const std::string DrawBoard(Coords selected, std::string selectedColor, std::string resetColor);
 
-	void SetCell(Coords coords, CellContentClass value);
-	CellContentClass GetCell(Coords coords);
+	void Cell(Coords coords, CellContentClass value);
+	CellContentClass Cell(Coords coords);
 
-	void SetGrid(Coords value);
-	Coords GetGrid() const;
+	void Grid(Coords value);
+	Coords Grid() const;
 };
 
 static GameBoard plantsBoard, zombiesBoard, gameBoard;
