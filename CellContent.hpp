@@ -5,6 +5,12 @@
 
 #include "cppFrameWork/FrameWork.hpp"
 
+enum DamageEnum {
+	Pea = 1,
+	FirePea = Pea * 2,
+	InstaKill = 90,
+};
+
 enum HPEnum {
 	Standard = 6,
 	ZombieHP = 10,

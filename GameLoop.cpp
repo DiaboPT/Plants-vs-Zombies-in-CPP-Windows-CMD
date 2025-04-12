@@ -391,9 +391,9 @@ void GameLoop() {
 
 									// Damages next cell
 									CellContentClass damagedZombie = gameBoard.Cell({ i, y });
-									damagedZombie.AddHP(-1);
+									damagedZombie.AddHP(-Pea);
 
-									if (damagedZombie.HP() <= Zombie.HP()) {
+									if (damagedZombie.Name() != Zombie.Name() && damagedZombie.HP() <= Zombie.HP()) {
 										damagedZombie.Color(Zombie.Color());
 										damagedZombie.Name(Zombie.Name());
 									}
@@ -416,22 +416,26 @@ void GameLoop() {
 						if (fmod(frameCount, fps * CherryBomb.Speed()) < 1) {
 							// PlayCherryBombExplodeSound();
 
-							for (int j = std::max(0, y - 1); j <= std::min(gameBoardSize.y - 1, y + 1); j++) {
-								for (int i = std::max(0, x - 1); i <= std::min(gameBoardSize.x - 1, x + 1); i++) {
+							for (int j = y -1; j <= y +1; j++) {
+								for (int i = x -1; i <= x +1; i++) {
 
 									for (int k = 0; k < level.GetZombiesTypes().size(); k++) {
-										if (gameBoard.Cell({ i, j }).Name() == level.GetZombiesTypes()[k].Name()) {
+										if (gameBoard.Cell({ i , j }).Name() == level.GetZombiesTypes()[k].Name()) {
 
-											CellContentClass damagedZombie = gameBoard.Cell({ i, j });
-											damagedZombie.AddHP(-90);
-											if (damagedZombie.HP() > 0) {
-												gameBoard.Cell({ i, j }, damagedZombie);
+											// Damages next cell
+											CellContentClass damagedZombie = gameBoard.Cell({ i , j });
+											damagedZombie.AddHP(-InstaKill);
+
+											if (damagedZombie.Name() != Zombie.Name() && damagedZombie.HP() <= Zombie.HP()) {
+												damagedZombie.Color(Zombie.Color());
+												damagedZombie.Name(Zombie.Name());
 											}
-											else {
-												gameBoard.Cell({ i, j }, Nothing);
+											else if (damagedZombie.HP() <= 0) {
+												damagedZombie = Nothing;
 												if (!winConditionReached) zombiesCurrency.AddCost(damagedZombie.Cost() / 2);
 											}
 											// PlayZombieHitSound();
+											gameBoard.Cell({ i , j }, damagedZombie);
 										}
 									}
 								}
@@ -519,14 +523,14 @@ void GameLoop() {
 
 							std::vector<int> possibleLines;
 							for (int j = 0; j < gameBoardSize.y; j++) {
-								if (gameBoard.Cell({ gameBoardSize.x - 1, j }).Name() == Nothing.Name()) {
+								if (gameBoard.Cell({ gameBoardSize.x, j }).Name() == Nothing.Name()) {
 									possibleLines.push_back(j);
 								}
 							}
 
 							if (!possibleLines.empty()) {
 								int randomLine = Random::FromList(possibleLines);
-								gameBoard.Cell({ gameBoardSize.x - 1, randomLine }, zombie);
+								gameBoard.Cell({ gameBoardSize.x, randomLine }, zombie);
 								zombiesCurrency.AddCost(-zombie.Cost());
 							}
 						}
@@ -534,47 +538,47 @@ void GameLoop() {
 					}
 				}
 
-				for (int x = gameBoardSize.x - 1; x >= 0; x--) {
+				for (int x = gameBoardSize.x; x >= 0; x--) {
 
 					// Rolling Nut
-					bool hasRollingWallNut = gameBoard.Cell({ x, y }).Char() == RollingWallNut.Char();
+					bool hasRollingWallNut = gameBoard.Cell({ x , y }).Name() == RollingWallNut.Name();
 					if (hasRollingWallNut) {
 
-						if (x == size.x - 1) {
-							gameBoard.Cell({ x, y }, Nothing);
-						}
-						else {
+						CellContentClass rolled = gameBoard.Cell({ x , y });
+
+						if (fmod(frameCount, fps * gameBoard.Cell({ x , y }).Speed()) < 1) {
+
 							bool hasZombieNext = false;
 							for (int i = 0; i < level.GetZombiesTypes().size(); i++) {
-								if (gameBoard.Cell({ x - 1, y }).Char() == level.GetZombiesTypes()[i].Char()) {
+								if (gameBoard.Cell({ x +1, y }).Name() == level.GetZombiesTypes()[i].Name()) {
 									hasZombieNext = true;
 									break;
 								}
 							}
 
-							if (fmod(frameCount, fps * gameBoard.Cell({ x,y }).Speed()) < 1) {
-								if (hasZombieNext) {
+							if (hasZombieNext) {
 
-									CellContentClass damagedZombie = gameBoard.Cell({ x - 1, y });
-									damagedZombie.AddHP(Zombie.HP());
-									if (damagedZombie.HP() != 0) {
-										gameBoard.Cell({ x - 1, y }, damagedZombie);
-									}
-									else {
-										if (!winConditionReached) zombiesCurrency.Cost(gameBoard.Cell({ x - 1, y }).Cost() * .5f);
-										gameBoard.Cell({ x - 1, y }, Nothing);
-									}
+								// Damages next cell
+								CellContentClass damagedZombie = gameBoard.Cell({ x + 1, y });
+								damagedZombie.AddHP(-Zombie.HP());
 
-									gameBoard.Cell({ x + 1 , y + 1 }, gameBoard.Cell({ x, y }));
-									gameBoard.Cell({ x, y }, Nothing);
-
-									// PlayZombieHitSound();
+								if (damagedZombie.Name() != Zombie.Name() && damagedZombie.HP() <= Zombie.HP()) {
+									damagedZombie.Color(Zombie.Color());
+									damagedZombie.Name(Zombie.Name());
 								}
-								else {
-									// Moves a cell foward
-									gameBoard.Cell({ x + 1 , y }, gameBoard.Cell({ x , y }));
-									gameBoard.Cell({ x, y }, Nothing);
+								else if (damagedZombie.HP() <= 0) {
+									damagedZombie = Nothing;
+									if (!winConditionReached) zombiesCurrency.AddCost(damagedZombie.Cost() / 2);
 								}
+								// PlayZombieHitSound();
+								gameBoard.Cell({ x +1, y }, damagedZombie);
+								gameBoard.Cell({ x +1 , (y == 0) ? y +1 : (y == gameBoardSize.y - 1) ? y -1 : y +Random::Range(-1, 1) }, rolled);
+								gameBoard.Cell({ x, y }, Nothing);
+							}
+							else {
+								// Moves a cell foward
+								gameBoard.Cell({ x +1 , y }, rolled);
+								gameBoard.Cell({ x, y }, Nothing);
 							}
 						}
 					}
