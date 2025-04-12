@@ -6,8 +6,8 @@
 #define PLANTRESET COLOR(208)
 #define GAMERESET  COLOR(46)
 
-const int Res = 256;
-const int Width = 4, Height = 3, Lenght = 5;
+const int Res = 32;
+const int Width = 24, Height = 30, Lenght = 5;
 Coords size{ Width , Height , Lenght };
 
 // Boards Size
@@ -21,6 +21,47 @@ static Coords
 	gameBoardSize{},
 	gameBoardSelection{}
 ;
+
+static void Menu() {
+
+	Coords menuSelection;
+	std::string title = "";
+	GameBoard MainMenu;
+
+	bool gameloop = true;
+	std::string output = "";
+	float fps = 60;
+
+	Update(gameloop, output, fps, [&] {
+
+		// Detects if key is pressed
+		if (IsKeyPressed()) {
+			char key = GetKeyPressed();
+
+			switch (key) {
+			case 'w': case 'W': if (menuSelection.y > 0) menuSelection.y--; break;
+			case 's': case 'S': if (menuSelection.y < menuSelection.y - 1) menuSelection.y++; break;
+
+			case ' ':
+			{
+
+			}
+			break;
+			case 27:
+				gameloop = false;
+				break;
+			}
+		}
+
+		output = RESET +
+			title +
+			"\n" + RESET +
+
+			MainMenu.DrawBoard(menuSelection, COLOR(46), PLANTRESET) +
+			"\n" + RESET
+			;
+		});
+}
 
 static std::vector<CellContentClass> ChooseSeeds(std::vector<CellContentClass> Seeds) {
 	std::vector<CellContentClass> vectorCellContent;
@@ -104,14 +145,14 @@ static std::vector<CellContentClass> ChooseSeeds(std::vector<CellContentClass> S
 
 			"- Name: " +
 			std::string(seedsTable.Cell(seedsTableSelection).Name()) +
-			RESET + std::string("                                    ") +
+			RESET + std::string("                   ") +
 			"\n" + RESET +
 
 			"- HP: " +
 			((seedsTable.Cell(seedsTableSelection).HP() > 9) ?
 				std::to_string(seedsTable.Cell(seedsTableSelection).HP()) + " " :
 				"0" + std::to_string(seedsTable.Cell(seedsTableSelection).HP())) +
-			RESET + std::string("                                    ") +
+			RESET + std::string("                   ") +
 			"\n" + RESET
 			;
 		});
@@ -159,7 +200,7 @@ void GameLoop() {
 	std::function<void()> ReStart = [&]() {
 
 		// Console and console font size
-		ConsoleFontSize(Res * .1f);
+		ConsoleFontSize(Res);
 		ConsoleSize(Res, size);
 
 		isLastFlag = false;
@@ -608,14 +649,14 @@ void GameLoop() {
 					
 				"- Name: " +
 				std::string(gameBoard.Cell(gameBoardSelection).Color()) + std::string(gameBoard.Cell(gameBoardSelection).Name()) +
-				RESET + std::string("                                    ") +
+				RESET + std::string("                   ") +
 				"\n" + RESET +
 				
 				"- HP: " +
 				std::string(gameBoard.Cell(gameBoardSelection).HP() > 9 ?
 				std::to_string(gameBoard.Cell(gameBoardSelection).HP()) + " " :
 				"0" + std::to_string(gameBoard.Cell(gameBoardSelection).HP())) +
-				RESET + std::string("                                    ") +
+				RESET + std::string("                   ") +
 				"\n" + RESET
 				
 				//+
