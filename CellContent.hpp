@@ -77,7 +77,7 @@ public:
 };
 
 static CellContentClass Nothing, plantsCurrency, zombiesCurrency;
-static int InicialPlantsCurrency = 2, InicialZombiesCurrency = 6;
+static int InicialPlantsCurrency = 2, InicialZombiesCurrency = 8;
 
 // Plants Cells
 // Info : https://plantsvszombies.fandom.com/wiki/Plants_(PvZ)
@@ -209,7 +209,7 @@ const CellContentClass
 	Zombie = CellContentClass(
 		COLOR(165),
 		std::string("Zombie"),
-		4 + InicialZombiesCurrency,
+		2 + InicialZombiesCurrency,
 		HPEnum::ZombieHP,
 		SpeedEnum::ZombieSpeed
 	),

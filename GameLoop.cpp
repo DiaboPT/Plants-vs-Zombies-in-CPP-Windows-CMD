@@ -6,9 +6,7 @@
 #define PLANTRESET COLOR(208)
 #define GAMERESET  COLOR(46)
 
-const int Res = 32;
-const int Width = 24, Height = 30, Lenght = 5;
-Coords size{ Width , Height , Lenght };
+static int Res = 44;
 
 // Boards Size
 static Coords
@@ -199,10 +197,6 @@ void GameLoop() {
 	bool gameloop = false;
 	std::function<void()> ReStart = [&]() {
 
-		// Console and console font size
-		ConsoleFontSize(Res);
-		ConsoleSize(Res, size);
-
 		isLastFlag = false;
 		winConditionReached = false;
 		flagZombieSpawned = false;
@@ -334,6 +328,9 @@ void GameLoop() {
 
 		ClearScreen();
 
+		// Console and console font size
+		ConsoleSize(Res);
+
 		};
 
 	// Start
@@ -420,33 +417,31 @@ void GameLoop() {
 						if (fmod(frameCount, fps * Peashooter.Speed()) < 1) {
 
 							for (int i = x + 1; i < gameBoardSize.x; i++) {
-
 								bool hasZombieNext = false;
-								for (int j = 0; j < level.GetZombiesTypes().size(); j++) {
-									if (gameBoard.Cell({ i, y }).Name() == level.GetZombiesTypes()[j].Name()) {
+								CellContentClass currentCell = gameBoard.Cell({ i, y });
+
+								for (const auto& zombieType : level.GetZombiesTypes()) {
+									if (currentCell.Name() == zombieType.Name()) {
 										hasZombieNext = true;
 										break;
 									}
 								}
+
 								if (hasZombieNext) {
+									currentCell.AddHP(-Pea);
 
-									// Damages next cell
-									CellContentClass damagedZombie = gameBoard.Cell({ i, y });
-									damagedZombie.AddHP(-Pea);
+									if (currentCell.HP() <= 0) {
+										int refund = currentCell.Cost() / 2;
+										currentCell = Nothing;
+										if (!winConditionReached)
+											zombiesCurrency.AddCost(refund);
+									}
 
-									if (damagedZombie.Name() != Zombie.Name() && damagedZombie.HP() <= Zombie.HP()) {
-										damagedZombie.Color(Zombie.Color());
-										damagedZombie.Name(Zombie.Name());
-									}
-									else if(damagedZombie.HP() <= 0) {
-										damagedZombie = Nothing;
-										if (!winConditionReached) zombiesCurrency.AddCost(damagedZombie.Cost() / 2);
-									}
-									// PlayZombieHitSound();
-									gameBoard.Cell({ i, y }, damagedZombie);
+									gameBoard.Cell({ i, y }, currentCell);
 									break;
 								}
 							}
+
 						}
 					}
 
@@ -467,11 +462,7 @@ void GameLoop() {
 											CellContentClass damagedZombie = gameBoard.Cell({ i , j });
 											damagedZombie.AddHP(-InstaKill);
 
-											if (damagedZombie.Name() != Zombie.Name() && damagedZombie.HP() <= Zombie.HP()) {
-												damagedZombie.Color(Zombie.Color());
-												damagedZombie.Name(Zombie.Name());
-											}
-											else if (damagedZombie.HP() <= 0) {
+											if (damagedZombie.HP() <= 0) {
 												damagedZombie = Nothing;
 												if (!winConditionReached) zombiesCurrency.AddCost(damagedZombie.Cost() / 2);
 											}
@@ -603,11 +594,7 @@ void GameLoop() {
 								CellContentClass damagedZombie = gameBoard.Cell({ x + 1, y });
 								damagedZombie.AddHP(-Zombie.HP());
 
-								if (damagedZombie.Name() != Zombie.Name() && damagedZombie.HP() <= Zombie.HP()) {
-									damagedZombie.Color(Zombie.Color());
-									damagedZombie.Name(Zombie.Name());
-								}
-								else if (damagedZombie.HP() <= 0) {
+								if (damagedZombie.HP() <= 0) {
 									damagedZombie = Nothing;
 									if (!winConditionReached) zombiesCurrency.AddCost(damagedZombie.Cost() / 2);
 								}
