@@ -11,8 +11,8 @@ private:
 	Coords level = { 0 , 0 };
 	float winCondiction = 0.0f;
 
-	std::vector<CellContent> plantsTypes;
-	std::vector<CellContent> zombiesTypes;
+	std::vector<CellContentClass> plantsTypes;
+	std::vector<CellContentClass> zombiesTypes;
 public:
 	Levels();
 
@@ -24,20 +24,22 @@ public:
 	float GetWinCondiction() const;
 
 	// Pass by reference to avoid copying
-	void SetPlantsTypes(const std::vector<CellContent> value);
+	void SetPlantsTypes(const std::vector<CellContentClass> value);
 
 	// Pass by reference to avoid copying
-	void AddPlantsTypes(const CellContent value);
+	void AddPlantsTypes(const CellContentClass value);
 
 	// Return by const reference to avoid copying
-	const std::vector<CellContent> GetPlantsTypes() const;
+	const std::vector<CellContentClass> GetPlantsTypes() const;
 
-	void SetZombiesTypes(const std::vector<CellContent> value);
+	void SetZombiesTypes(const std::vector<CellContentClass> value);
 
-	void AddZombiesTypes(const CellContent value);
+	void AddZombiesTypes(const CellContentClass value);
 
-	const std::vector<CellContent> GetZombiesTypes() const;
+	const std::vector<CellContentClass> GetZombiesTypes() const;
 
 	void ClearTypes();
 
 };
+
+static Levels level = Levels();

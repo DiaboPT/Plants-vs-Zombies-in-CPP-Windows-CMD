@@ -1,12 +1,19 @@
 
 #include "GameBoard.hpp"
 
-GameBoard::GameBoard(Coords size) : cell(size.x, std::vector<CellContent>(size.y)) {
-	grid = size;
-}
-
 GameBoard::GameBoard() {
 	grid = { 0, 0 };
+}
+
+GameBoard::GameBoard(Coords size) : cell(size.x, std::vector<CellContentClass>(size.y)) {
+	grid = size;
+
+	for (int y = 0; y < grid.y; y++) {
+		for (int x = 0; x < grid.x; x++) {
+			GameBoard::Cell(grid, Nothing);
+		}
+	}
+
 }
 
 const std::string GameBoard::DrawBoard(Coords selected, std::string selectedColor, std::string resetColor) {
@@ -21,7 +28,7 @@ const std::string GameBoard::DrawBoard(Coords selected, std::string selectedColo
 	for (int y = 0; y < grid.y; y++) {
 		returned += selected.x == 0 && selected.y == y ? selectedColor + std::string("| ") + resetColor : std::string("| ");
 		for (int x = 0; x < grid.x; x++) {
-			returned += cell[x][y].GetColor() + cell[x][y].Get_Char() + resetColor;
+			returned += cell[x][y].Color() + cell[x][y].Char() + resetColor;
 			if (x < grid.x - 1) {
 				returned += ((selected.x == x && selected.y == y) || (selected.x == x + 1 && selected.y == y)) ? selectedColor + std::string(" | ") + resetColor : std::string(" | ");
 			}
@@ -41,22 +48,22 @@ const std::string GameBoard::DrawBoard(Coords selected, std::string selectedColo
 	return returned;
 }
 
-void GameBoard::SetCell(Coords coords, CellContent value) {
+void GameBoard::Cell(Coords coords, CellContentClass value) {
 	cell
-		[(coords.x < 0) ? 0 : (coords.x > grid.x - 1) ? grid.x - 1 : coords.x]
-		[(coords.y < 0) ? 0 : (coords.y > grid.y - 1) ? grid.y - 1 : coords.y]
+		[(coords.x < 0) ? 0 : (coords.x > grid.x - 1) ? static_cast<std::vector<std::vector<CellContentClass, std::allocator<CellContentClass>>, std::allocator<std::vector<CellContentClass, std::allocator<CellContentClass>>>>::size_type>(grid.x) - 1 : coords.x]
+		[(coords.y < 0) ? 0 : (coords.y > grid.y - 1) ? static_cast<std::vector<CellContentClass, std::allocator<CellContentClass>>::size_type>(grid.y) - 1 : coords.y]
 		= value;
 }
 
-CellContent GameBoard::GetCell(Coords coords) {
+CellContentClass GameBoard::Cell(Coords coords) {
 	return cell
-		[(coords.x < 0) ? 0 : (coords.x > grid.x - 1) ? grid.x - 1 : coords.x]
-		[(coords.y < 0) ? 0 : (coords.y > grid.y - 1) ? grid.y - 1 : coords.y];
+		[(coords.x < 0) ? 0 : (coords.x > grid.x - 1) ? static_cast<std::vector<std::vector<CellContentClass, std::allocator<CellContentClass>>, std::allocator<std::vector<CellContentClass, std::allocator<CellContentClass>>>>::size_type>(grid.x) - 1 : coords.x]
+		[(coords.y < 0) ? 0 : (coords.y > grid.y - 1) ? static_cast<std::vector<CellContentClass, std::allocator<CellContentClass>>::size_type>(grid.y) - 1 : coords.y];
 }
 
-void GameBoard::SetGrid(Coords value) {
+void GameBoard::Grid(Coords value) {
 	grid = value;
 }
-Coords GameBoard::GetGrid() {
+Coords GameBoard::Grid() const {
 	return grid;
 }

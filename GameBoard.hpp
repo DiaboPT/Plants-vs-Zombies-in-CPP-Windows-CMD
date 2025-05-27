@@ -9,17 +9,19 @@
 class GameBoard {
 private:
 	Coords grid;
-	std::vector<std::vector<CellContent>> cell;
+	std::vector<std::vector<CellContentClass>> cell;
 
 public:
-	GameBoard(Coords size);
 	GameBoard();
+	GameBoard(Coords);
 
 	const std::string DrawBoard(Coords selected, std::string selectedColor, std::string resetColor);
 
-	void SetCell(Coords coords, CellContent value);
-	CellContent GetCell(Coords coords);
+	void Cell(Coords coords, CellContentClass value);
+	CellContentClass Cell(Coords coords);
 
-	void SetGrid(Coords value);
-	Coords GetGrid();
+	void Grid(Coords value);
+	Coords Grid() const;
 };
+
+static GameBoard plantsBoard, zombiesBoard, gameBoard;
